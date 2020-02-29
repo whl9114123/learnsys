@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--本地开发测试用log文件，用户快速抓取SQL-->
+<configuration status="WARN">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </appenders>
+
+    <loggers>
+        <!--sql_only模式，不关注其他业务-->
+        <logger name="jdbc.sqlonly" level="info">
+<!--            <appender-ref ref="Console"/>-->
+        </logger>
+        <logger name="jdbc.audit" level="OFF">
+        </logger>
+        <logger name="jdbc.resultset" level="OFF">
+        </logger>
+        <logger name="jdbc.connection" level="OFF">
+        </logger>
+        <logger name="jdbc.sqltiming" level="OFF">
+        </logger>
+        <!--全局info级别-->
+        <root level="info">
+            <appender-ref ref="Console"/>
+        </root>
+    </loggers>
+
+</configuration>
