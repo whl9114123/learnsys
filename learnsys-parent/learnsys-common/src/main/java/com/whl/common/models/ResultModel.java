@@ -1,10 +1,10 @@
 package com.whl.common.models;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.whl.common.enums.ResultCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.util.ObjectUtils;
 
 
 @Getter
@@ -53,14 +53,14 @@ public class ResultModel<T> {
     }
 
     public static <T> ResultModel<T> valueOf(ResultCode resultCode, T data, String message,int hasMore) {
-        if (StringUtils.isEmpty(message)) {
+        if (ObjectUtils.isEmpty(message)) {
             message = resultCode.getMessage();
         }
         return new ResultModel<T>(resultCode.getCode(), data, message,hasMore);
     }
 
     public static <T> ResultModel<T> valueOf(ResultCode resultCode, T data, String message) {
-        if (StringUtils.isEmpty(message)) {
+        if (ObjectUtils.isEmpty(message)) {
             message = resultCode.getMessage();
         }
         return new ResultModel<T>(resultCode.getCode(), data, message,0);
