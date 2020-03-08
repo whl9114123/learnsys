@@ -3,7 +3,7 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/huamall?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://127.0.0.1:3306/renrenio?useUnicode=true&characterEncoding=utf8
       username: root
       password: root
       max-active: 20
@@ -29,14 +29,16 @@ logging:
 mybatis-plus:
 
   #xml扫描，多个目录用逗号或者分号分隔（告诉 Mapper 所对应的 XML 文件位置）
-  mapper-locations: classpath*:mappers/*Mapper.xml
+  mapper-locations: classpath*:mappers/**/*.xml
   #MyBaits 别名包扫描路径，通过该属性可以给包中的类注册别名
   type-aliases-package: com.whl.common.models.*
 
   #项目启动会检查xml配置存在(只在开发时候打开)
   check-config-location: true
   #SIMPLE：该执行器类型不做特殊的事情，为每个语句的执行创建一个新的预处理语句,REUSE：该执行器类型会复用预处理语句,BATCH：该执行器类型会批量执行所有的更新语句
-  default-executor-type: REUSE
+#  default-executor-type: REUSE
+#  #日志
+#  log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   configuration:
     # 是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN（下划线命名） 到经典 Java 属性名 aColumn（驼峰命名） 的类似映射
     map-underscore-to-camel-case: true
@@ -45,6 +47,8 @@ mybatis-plus:
 
     #如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
     call-setters-on-nulls: true
+  # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 jackson:
   time-zone: GMT+8
   date-format: yyyy-MM-dd HH:mm:ss

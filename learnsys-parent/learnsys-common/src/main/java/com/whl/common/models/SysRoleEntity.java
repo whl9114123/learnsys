@@ -5,43 +5,40 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * 
+ * 角色
  * 
  * @author Mark
  * @email sunlightcs@gmail.com
- * @date 2020-03-01 20:29:16
+ * @date 2020-03-07 18:18:34
  */
 @Data
-@TableName("user")
-public class UserEntity implements Serializable {
+@TableName("sys_role")
+public class SysRoleEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
 	 */
 	@TableId
-	private Integer userId;
+	private Long roleId;
 	/**
-	 * 
+	 * 角色名称
 	 */
-	private String userUsername;
+	private String roleName;
 	/**
-	 * 
+	 * 备注
 	 */
-	private String userPassword;
+	private String remark;
 	/**
-	 * 
+	 * 部门ID
 	 */
-	private String userNickname;
+	private Long deptId;
 	/**
-	 * 
+	 * 创建时间
 	 */
-	private String userPhone;
-	/**
-	 * 
-	 */
-	private String userEmail;
+	private Date createTime;
 
 }

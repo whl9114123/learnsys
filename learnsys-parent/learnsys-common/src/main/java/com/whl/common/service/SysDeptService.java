@@ -1,16 +1,16 @@
 package com.whl.common.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.whl.common.models.UserEntity;
+import com.whl.common.models.SysDeptEntity;
 
 /**
- * 
+ * 部门管理
  *
  * @author Mark
  * @email sunlightcs@gmail.com
- * @date 2020-03-01 20:29:16
+ * @date 2020-03-07 18:19:07
  */
-public interface UserService extends IService<UserEntity> {
+public interface SysDeptService extends IService<SysDeptEntity> {
 
 
 }
