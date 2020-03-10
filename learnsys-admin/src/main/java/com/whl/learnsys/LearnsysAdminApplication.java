@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author wuhuanling
  */
 @SpringBootApplication(scanBasePackages = "com.whl.*")
-@MapperScan("com.whl.common.mappers")
+@MapperScan("com.whl.common.mappers.*")
 public class LearnsysAdminApplication {
 
     public static void main(String[] args) {
