@@ -17,13 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
-/**
- * 部门管理
- *
- * @author Mark
- * @email sunlightcs@gmail.com
- * @date 2020-03-07 18:19:07
- */
 @Api(tags = "部门管理")
 @RestController
 @RequestMapping("sys/dept")
@@ -45,14 +38,13 @@ public class SysDeptController {
         }
 
 
-        return ResultModel.valueOf(ResultCode.FAILURE,page1,null,hasMore);
+        return ResultModel.valueOf(ResultCode.SUCCESS,page1,null,hasMore);
     }
 
-    @ApiOperation(value = "获取用户", notes = "获取用户")
+    @ApiOperation(value = "获取部门详情", notes = "获取部门详情")
     @ApiImplicitParam(name = "id", value = " 参数", required = true, dataType = "Long")
-
     @GetMapping( "/{id}")
-    public ResultModel<SysDeptEntity> getUser( @PathVariable("id") Long id) {
+    public ResultModel<SysDeptEntity> getDetail( @PathVariable("id") Long id) {
 
         SysDeptEntity dept = sysDeptService.getById(id);
 
@@ -60,10 +52,10 @@ public class SysDeptController {
         return ResultModel.valueOf(ResultCode.SUCCESS,dept);
     }
 
-    @ApiOperation(value = "删除用户", notes = "获取用户")
+    @ApiOperation(value = "删除一个部门", notes = "删除一个部门")
     @ApiImplicitParam(name = "id", value = " 参数", required = true, dataType = "Long")
     @DeleteMapping( "/{id}")
-    public ResultModel<Boolean> deleteUser( @PathVariable("id") Long id) {
+    public ResultModel<Boolean> delete( @PathVariable("id") Long id) {
         QueryWrapper<SysDeptEntity> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("user_id",id);
         boolean b = sysDeptService.removeById(id);
@@ -75,7 +67,7 @@ public class SysDeptController {
     @ApiOperation(value = "添加用户", notes = "添加用户")
     @ApiImplicitParam(name = "userParam", value = "参数", required = true, dataType = "UserParam")
     @PostMapping( "/addUser")
-    public ResultModel<Boolean> insertUser( @RequestBody SysDeptEntity SysDeptEntity) {
+    public ResultModel<Boolean> insert( @RequestBody SysDeptEntity SysDeptEntity) {
         SysUserEntity sysUserEntity = DozerUtil.mapper(SysDeptEntity, SysUserEntity.class);
         boolean b = sysDeptService.save(SysDeptEntity);
         if (!b){

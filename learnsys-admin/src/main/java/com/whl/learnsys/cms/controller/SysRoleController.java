@@ -43,7 +43,7 @@ public class SysRoleController {
         return ResultModel.valueOf(ResultCode.FAILURE,page1,null,hasMore);
     }
 
-    @ApiOperation(value = "获取用户", notes = "获取用户")
+    @ApiOperation(value = "获取角色详情", notes = "获取用户")
     @ApiImplicitParam(name = "id", value = " 参数", required = true, dataType = "Long")
 
     @GetMapping( "/{id}")

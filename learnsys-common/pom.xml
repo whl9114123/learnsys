@@ -35,17 +35,18 @@
         <groupId>net.sf.dozer</groupId>
         <artifactId>dozer</artifactId>
         <version>5.4.0</version>
-<!--        <exclusions>-->
-            <!--目前项目中使用的是apache自带的log4j-->
-<!--            <exclusion>-->
-<!--                <groupId>org.slf4j</groupId>-->
-<!--                <artifactId>slf4j-log4j12</artifactId>-->
-<!--            </exclusion>-->
-<!--            &lt;!&ndash;<exclusion>-->
-<!--               <groupId>log4j</groupId>-->
-<!--               <artifactId>log4j</artifactId>-->
-<!--            </exclusion>&ndash;&gt;-->
-<!--        </exclusions>-->
+        <exclusions>
+<!--            目前项目中使用的是apache自带的log4j-->
+            <exclusion>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+            </exclusion>
+            <!--<exclusion>
+               <groupId>log4j</groupId>
+               <artifactId>log4j</artifactId>
+            </exclusion>-->
+        </exclusions>
+
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
     <dependency>
@@ -53,7 +54,12 @@
         <artifactId>springfox-swagger-ui</artifactId>
         <version>2.9.2</version>
     </dependency>
-
+<!--    json-->
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.58</version>
+    </dependency>
 
     <!--美化swagger-->
     <dependency>
