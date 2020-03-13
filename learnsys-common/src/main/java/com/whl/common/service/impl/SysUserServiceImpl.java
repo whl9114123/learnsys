@@ -1,7 +1,7 @@
 package com.whl.common.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.whl.common.mappers.system.SysUserDao;
+import com.whl.common.mappers.SysUserDao;
 import com.whl.common.models.SysUserEntity;
 import com.whl.common.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;

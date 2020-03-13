@@ -7,12 +7,14 @@ import com.whl.common.models.ResultModel;
 import com.whl.common.models.SysUserEntity;
 import com.whl.common.param.PageParam;
 import com.whl.common.param.UserParam;
+import com.whl.common.service.CacheService;
 import com.whl.common.service.SysUserService;
 import com.whl.common.util.DozerUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,7 +25,8 @@ public class SysUserController {
 
     @Autowired
     private SysUserService sysUserService;
-
+@Autowired
+ private    CacheService cacheService;
 
     @ApiOperation(value = "获取用户列表", notes = "获取用户列表")
     @ApiImplicitParam(name = "pageParam", value = "获取推荐新闻参数", required = true, dataType = "PageParam")
@@ -46,8 +49,14 @@ public class SysUserController {
 
     @GetMapping( "/{id}")
     public ResultModel<SysUserEntity> getUser( @PathVariable("id") Long id) {
+        String key="user:" + id;
+        SysUserEntity user = cacheService.getObject(key, SysUserEntity.class);
+        if (ObjectUtils.isEmpty(user)){
+             user = sysUserService.getById(id);
+            cacheService.setObject(key,user);
+        }
 
-        SysUserEntity user = sysUserService.getById(id);
+
 
 
         return ResultModel.valueOf(ResultCode.SUCCESS,user);

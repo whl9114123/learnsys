@@ -19,9 +19,10 @@ public class RedisAspect {
     @Value("${learnsys.redis.open: false}")
     private boolean open;
 
-//    @Around("execution(* com.whl.common.util.RedisUtils.*(..))")
+    @Around("execution(* com.whl.common.service.CacheService.*(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         Object result = null;
+        log.error("redis 开关状态");
         if (open) {
             try {
                 result = point.proceed();

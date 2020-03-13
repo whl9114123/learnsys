@@ -1,7 +1,7 @@
 package com.whl.common.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.whl.common.mappers.system.SysRoleDao;
+import com.whl.common.mappers.SysRoleDao;
 import com.whl.common.models.SysRoleEntity;
 import com.whl.common.service.SysRoleService;
 import org.springframework.stereotype.Service;
