@@ -1,4 +1,7 @@
-package com.whl.common.models;
+package com.whl.common.models
+
+
+		;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
