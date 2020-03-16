@@ -14,7 +14,7 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/renrenio?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://127.0.0.1:3306/whl?useUnicode=true&characterEncoding=utf8
       username: root
       password: root
       max-active: 20

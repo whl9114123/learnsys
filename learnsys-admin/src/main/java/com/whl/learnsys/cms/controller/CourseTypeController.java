@@ -3,6 +3,7 @@ package com.whl.learnsys.cms.controller;
 import com.whl.common.models.CourseTypeEntity;
 import com.whl.common.service.CourseTypeService;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +14,11 @@ import java.util.Arrays;
 
 
 
+
 /**
- *
+ * @author wuhuanling
  */
+@Api(tags = "课程类型管理")
 @RestController
 @RequestMapping("sys/coursetype")
 public class CourseTypeController {

@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @date : 2020-03-10 11:33
  */
 @Data
-@ApiModel
+
 public class IdParam {
-    @ApiModelProperty(value = "用户id", required = true)
 
     private   Long id;
 }

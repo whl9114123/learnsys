@@ -8,6 +8,7 @@ import com.whl.common.models.ResultModel;
 import com.whl.common.param.CourseRequest;
 import com.whl.common.service.CourseInfoService;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,9 @@ import java.util.Arrays;
 
 
 /**
- * 
- *
- * @author Mark
- * @email sunlightcs@gmail.com
- * @date 2020-03-13 16:00:37
+ * @author wuhuanling
  */
+@Api(tags = "课程管理")
 @RestController
 @RequestMapping("sys/courseinfo")
 public class CourseInfoController {

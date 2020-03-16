@@ -3,6 +3,7 @@ package com.whl.learnsys.cms.controller;
 import com.whl.common.models.VideoInfoEntity;
 import com.whl.common.service.VideoInfoService;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,11 +15,9 @@ import java.util.Arrays;
 
 
 /**
- * 
- *
- * @author Mark
- * @date 2020-03-13 16:00:37
+ * @author wuhuanling
  */
+@Api(tags = "视频管理")
 @RestController
 @RequestMapping("sys/videoinfo")
 public class VideoInfoController {

@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
+
 /**
- * 菜单管理
- *
- * @author Mark
- * @email sunlightcs@gmail.com
- * @date 2020-03-07 18:18:34
+ * @author wuhuanling
  */
-@Api(tags = "菜单管理")
+@Api(tags = "权限管理")
 @RestController
 @RequestMapping("sys/menu")
 public class SysMenuController {

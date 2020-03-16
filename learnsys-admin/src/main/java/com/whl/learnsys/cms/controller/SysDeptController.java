@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+/**
+ * @author wuhuanling
+ */
 @Api(tags = "部门管理")
 @RestController
 @RequestMapping("sys/dept")
