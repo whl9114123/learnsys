@@ -12,12 +12,7 @@
         <module>learnsys-admin</module>
     </modules>
     <packaging>pom</packaging>
-<!--    <parent>-->
-<!--        <artifactId>learnsys</artifactId>-->
-<!--        <groupId></groupId>-->
-<!--        <version>1.0-SNAPSHOT</version>-->
-<!--        <relativePath>../pom.xml</relativePath>-->
-<!--    </parent>-->
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

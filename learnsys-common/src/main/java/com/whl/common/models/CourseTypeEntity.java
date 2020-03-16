@@ -31,10 +31,7 @@ public class CourseTypeEntity implements Serializable {
 	 * 
 	 */
 	private String name;
-	/**
-	 * 
-	 */
-	private Long courseId;
+
 	/**
 	 * 
 	 */

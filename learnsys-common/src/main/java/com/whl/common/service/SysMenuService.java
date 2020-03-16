@@ -3,6 +3,9 @@ package com.whl.common.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.whl.common.models.SysMenuEntity;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * 菜单管理
  *
@@ -13,5 +16,7 @@ import com.whl.common.models.SysMenuEntity;
 public interface SysMenuService extends IService<SysMenuEntity> {
 
 
+
+    Set<SysMenuEntity> getPermissionByRoles(List<Long> roleIds);
 }
 

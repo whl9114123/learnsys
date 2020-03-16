@@ -14,11 +14,7 @@ import java.util.Arrays;
 
 
 /**
- * 
  *
- * @author Mark
- * @email sunlightcs@gmail.com
- * @date 2020-03-13 16:00:37
  */
 @RestController
 @RequestMapping("sys/coursetype")

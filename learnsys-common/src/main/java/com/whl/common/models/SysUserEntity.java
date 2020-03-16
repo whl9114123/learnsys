@@ -3,7 +3,8 @@ package com.whl.common.models;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,7 +16,8 @@ import java.util.Date;
  * @email sunlightcs@gmail.com
  * @date 2020-03-07 17:34:54
  */
-@Data
+@Getter
+@Setter
 @TableName("sys_user")
 public class SysUserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

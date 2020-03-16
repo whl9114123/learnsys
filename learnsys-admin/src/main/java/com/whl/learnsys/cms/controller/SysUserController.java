@@ -13,6 +13,10 @@ import com.whl.common.util.DozerUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.hash.Md5Hash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +33,7 @@ public class SysUserController {
  private    CacheService cacheService;
 
     @ApiOperation(value = "获取用户列表", notes = "获取用户列表")
-    @ApiImplicitParam(name = "pageParam", value = "获取推荐新闻参数", required = true, dataType = "PageParam")
+    @ApiImplicitParam(name = "pageParam", value = "获取参数", required = true, dataType = "PageParam")
     @PostMapping( "/list")
     public ResultModel<Page<SysUserEntity>> list(@RequestBody PageParam pageParam) {
 
@@ -41,7 +45,7 @@ public class SysUserController {
         }
 
 
-        return ResultModel.valueOf(ResultCode.FAILURE,page1,null,hasMore);
+        return ResultModel.valueOf(ResultCode.SUCCESS,page1,null,hasMore);
     }
 
     @ApiOperation(value = "获取用户", notes = "获取用户")
@@ -55,10 +59,6 @@ public class SysUserController {
              user = sysUserService.getById(id);
             cacheService.setObject(key,user);
         }
-
-
-
-
         return ResultModel.valueOf(ResultCode.SUCCESS,user);
     }
 
@@ -84,6 +84,20 @@ if (!b){
             return ResultModel.valueOf(ResultCode.FAILURE, false);
         }
         return ResultModel.valueOf(ResultCode.SUCCESS, true);
+    }
+
+    @PostMapping( "/lUser")
+    public ResultModel<Boolean> lo( @RequestBody UserParam param) {
+        try {
+            //密码加密 1.加密内容 2.盐值,3加密次数
+            String md5Hash=new Md5Hash(param.getPassword(),param.getUsername(),3).toString();
+            UsernamePasswordToken upToken = new UsernamePasswordToken(param.getUsername(), param.getPassword());
+            Subject subject = SecurityUtils.getSubject();
+            subject.login(upToken);
+        } catch (Exception e) {
+
+        }
+return null;
     }
 
 

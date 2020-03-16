@@ -3,6 +3,8 @@ package com.whl.common.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.whl.common.models.SysRoleEntity;
 
+import java.util.Set;
+
 /**
  * 角色
  *
@@ -13,5 +15,6 @@ import com.whl.common.models.SysRoleEntity;
 public interface SysRoleService extends IService<SysRoleEntity> {
 
 
+    Set<SysRoleEntity> getRolesById(Long userId);
 }
 
