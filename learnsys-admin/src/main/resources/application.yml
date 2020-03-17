@@ -1,5 +1,10 @@
 #配置数据源
 spring:
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+#      additional-paths: src/main/java #重启目录
+      exclude: WEB-INF/**
   redis:
     host: 127.0.0.1
     port: 6379
