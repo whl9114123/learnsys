@@ -3,17 +3,17 @@ package com.whl.learnsys.cms.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 @Slf4j
 @Api(tags = {"上传模块"})
@@ -22,29 +22,10 @@ import java.util.UUID;
 public class UploadController {
 
     private String  url;
+    @Value("${file.uploadFolder}")
+    private String uploadFolder;
 
-    public String upload(@ApiParam(value = "上传的文件",required = true) MultipartFile file, HttpServletRequest request) throws FileNotFoundException {
-        String format = DateFormatUtils.format(new Date(), "yyyy-mm-dd");
-
-        String path = request.getServletContext().getRealPath(
-                "/static/");
-        File folder = new File(path);
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        String oldName = file.getOriginalFilename();
-        assert oldName != null;
-        String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."));
-        try {
-            file.transferTo(new File(folder, newName));
-            return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/img" + format + newName;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "error";
-    }
     @PostMapping("/upload")
-
     public String uploadFile(@ApiParam(value = "上传的文件",required = true) MultipartFile file, HttpServletRequest request) {
         System.out.print("上传文件==="+"\n");
         //判断文件是否为空
@@ -57,7 +38,7 @@ public class UploadController {
         fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "_" + fileName;
         System.out.print("（加个时间戳，尽量避免文件名称重复）保存的文件名为: "+fileName+"\n");
         //加个时间戳，尽量避免文件名称重复
-        String path = "C:\\workSpace\\learnsys-parent\\learnsys-admin\\src\\main\\resources\\static\\" +fileName;
+        String path = uploadFolder+fileName;
         //String path = "E:/fileUpload/" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "_" + fileName;
         //文件绝对路径
         System.out.print("保存文件绝对路径"+path+"\n");
@@ -73,15 +54,13 @@ public class UploadController {
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdir();
         }
-
         try {
             //上传文件
             file.transferTo(dest); //保存文件
             System.out.print("保存文件路径"+path+"\n");
             //url="http://你自己的域名/项目名/images/"+fileName;//正式项目
-          url="http://localhost:9001/images/"+fileName;//本地运行项目
-//            int jieguo= shiPinService.insertUrl(fileName,path,url);
-//            System.out.print("插入结果"+jieguo+"\n");
+          url="http://localhost:9001/static/"+fileName;//本地运行项目
+
             System.out.print("保存的完整url===="+url+"\n");
 
         } catch (IOException e) {

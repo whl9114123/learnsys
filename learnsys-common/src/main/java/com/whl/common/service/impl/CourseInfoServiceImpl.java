@@ -6,9 +6,12 @@ import com.whl.common.models.CourseInfoEntity;
 import com.whl.common.service.CourseInfoService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 
 @Service("courseInfoService")
 public class CourseInfoServiceImpl extends ServiceImpl<CourseInfoDao, CourseInfoEntity> implements CourseInfoService {
 
-
+@Resource
+    CourseInfoDao courseInfoDao;
 }
