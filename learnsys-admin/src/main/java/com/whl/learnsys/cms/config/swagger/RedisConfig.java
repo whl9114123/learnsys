@@ -2,6 +2,7 @@ package com.whl.learnsys.cms.config.swagger;
 
 import com.whl.common.listener.RedisMessageListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -15,6 +16,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
  * @author: whl
  * @create: 2020-03-27 13:36
  **/
+@Configuration
 public class RedisConfig {
     @Bean("container")
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,

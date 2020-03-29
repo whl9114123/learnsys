@@ -27,7 +27,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * 用“@ServerEndPoint”注解来实现，实现简单；
  * 分别是用户ID 和用户订阅的主题
  */
-@ServerEndpoint("/socket/{userId}/{topic}")
+//@ServerEndpoint("/socket/{userId}/{topic}")
 @RestController
 public class WebsocketEndpoint {
 

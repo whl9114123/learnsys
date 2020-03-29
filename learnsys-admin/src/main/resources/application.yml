@@ -38,10 +38,10 @@ learnsys:
   redis:
       open : false
 server:
-  port: 9002
+  port: 8888
 
 swagger:
-  host: localhost:9002
+  host: localhost:8888
   title: SpringBoot 整合 Swagger2
   description: 网站描述
   disabled: false # 是否禁用swagger
@@ -49,7 +49,7 @@ swagger:
 project:
   version: 1.0
 logging:
-  config: classpath:local-sql.xml
+#  config: classpath:log4j2-local.xml
 
 mybatis-plus:
 
