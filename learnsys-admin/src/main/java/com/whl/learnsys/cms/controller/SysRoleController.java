@@ -29,8 +29,7 @@ public class SysRoleController {
     private SysRoleService sysRoleService;
 
 
-    @ApiOperation(value = "获取用户列表", notes = "获取用户列表")
-    @ApiImplicitParam(name = "pageParam", value = "获取推荐新闻参数", required = true, dataType = "PageParam")
+    @ApiOperation(value = "获取角色列表")
     @PostMapping( "/list")
     public ResultModel<Page<SysRoleEntity>> list(@RequestBody PageParam pageParam) {
 
@@ -45,11 +44,10 @@ public class SysRoleController {
         return ResultModel.valueOf(ResultCode.FAILURE,page1,null,hasMore);
     }
 
-    @ApiOperation(value = "获取角色详情", notes = "获取用户")
-    @ApiImplicitParam(name = "id", value = " 参数", required = true, dataType = "Long")
+    @ApiOperation(value = "获取角色详情")
 
     @GetMapping( "/{id}")
-    public ResultModel<SysRoleEntity> getUser( @PathVariable("id") Long id) {
+    public ResultModel<SysRoleEntity> detail( @PathVariable("id") Long id) {
 
         SysRoleEntity sysRoleEntity = sysRoleService.getById(id);
 
@@ -57,10 +55,9 @@ public class SysRoleController {
         return ResultModel.valueOf(ResultCode.SUCCESS,sysRoleEntity);
     }
 
-    @ApiOperation(value = "删除用户", notes = "获取用户")
-    @ApiImplicitParam(name = "id", value = " 参数", required = true, dataType = "Long")
+    @ApiOperation(value = "删除角色", notes = "删除角色")
     @DeleteMapping( "/{id}")
-    public ResultModel<Boolean> deleteUser( @PathVariable("id") Long id) {
+    public ResultModel<Boolean> delete( @PathVariable("id") Long id) {
         QueryWrapper<SysUserEntity> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("user_id",id);
         boolean b = sysRoleService.removeById(id);
@@ -69,10 +66,10 @@ public class SysRoleController {
         }
         return ResultModel.valueOf(ResultCode.SUCCESS, true);
     }
-    @ApiOperation(value = "添加用户", notes = "添加用户")
+    @ApiOperation(value = "添加角色")
     @ApiImplicitParam(name = "userParam", value = "参数", required = true, dataType = "UserParam")
     @PostMapping( "/addUser")
-    public ResultModel<Boolean> insertUser( @RequestBody SysRoleEntity sysRoleEntity) {
+    public ResultModel<Boolean> insert( @RequestBody SysRoleEntity sysRoleEntity) {
         SysRoleEntity sysRoleEntity1 = DozerUtil.mapper(sysRoleEntity, SysRoleEntity.class);
         boolean b = sysRoleService.save(sysRoleEntity1);
         if (!b){

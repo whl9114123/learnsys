@@ -31,8 +31,8 @@ public class CourseInfoController {
 
 
 
-    @ApiOperation(value = "获取用户列表", notes = "获取用户列表")
-    @ApiImplicitParam(name = "param", value = "获取参数", required = true, dataType = "CourseRequest")
+    @ApiOperation(value = "获取列表", notes = "获取用户列表")
+
     @PostMapping( "/list")
     public ResultModel<Page<CourseInfoEntity>> list(@RequestBody CourseRequest param) {
 

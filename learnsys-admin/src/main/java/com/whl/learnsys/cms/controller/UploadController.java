@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Slf4j
-@Api(tags = {"上传模块"})
+@Api(tags = {"上传视频模块"})
 @RestController
 @CrossOrigin
 public class UploadController {

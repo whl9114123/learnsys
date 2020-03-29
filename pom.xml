@@ -10,6 +10,7 @@
     <modules>
         <module>learnsys-common</module>
         <module>learnsys-admin</module>
+        <module>xypush-spring-boot-starter</module>
     </modules>
     <packaging>pom</packaging>
 

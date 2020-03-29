@@ -83,7 +83,6 @@ public class SysUserController {
         return ResultModel.valueOf(ResultCode.SUCCESS, true);
     }
     @ApiOperation(value = "添加用户", notes = "添加用户")
-    @ApiImplicitParam(name = "userParam", value = "参数", required = true, dataType = "UserParam")
     @PostMapping("/addUser")
     public ResultModel<Boolean> insertUser(@RequestBody UserParam userParam) {
         SysUserEntity sysUserEntity = DozerUtil.mapper(userParam, SysUserEntity.class);
@@ -93,25 +92,24 @@ public class SysUserController {
         }
         return ResultModel.valueOf(ResultCode.SUCCESS, true);
     }
-    @ApiOperation(value = "添加用户", notes = "添加用户")
-    @ApiImplicitParam(name = "userParam", value = "参数", required = true, dataType = "UserParam")
-    @PostMapping("/login")
-    public ResultModel<String> login(@RequestBody UserParam userParam) {
-        SysUserEntity sysUserEntity = DozerUtil.mapper(userParam, SysUserEntity.class);
-        QueryWrapper<SysUserEntity> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("username",userParam.getUsername()).eq("password",userParam.getPassword());
-        SysUserEntity user = sysUserService.getOne(queryWrapper);
-        if (ObjectUtils.isEmpty(user)){
-            return ResultModel.valueOf(ResultCode.FAILURE,null);
-        }
-     Map<String,Object> map=  new HashMap<>();
-        map.put("user",user);
-        String jwt = JwtUtils.createJwt(map);
-        return ResultModel.valueOf(ResultCode.SUCCESS, jwt);
-    }
+//    @ApiOperation(value = "登录", notes = "添加用户")
+//    @PostMapping("/login")
+//    public ResultModel<String> login(@RequestBody UserParam userParam) {
+//        SysUserEntity sysUserEntity = DozerUtil.mapper(userParam, SysUserEntity.class);
+//        QueryWrapper<SysUserEntity> queryWrapper=new QueryWrapper<>();
+//        queryWrapper.eq("username",userParam.getUsername()).eq("password",userParam.getPassword());
+//        SysUserEntity user = sysUserService.getOne(queryWrapper);
+//        if (ObjectUtils.isEmpty(user)){
+//            return ResultModel.valueOf(ResultCode.FAILURE,null);
+//        }
+//     Map<String,Object> map=  new HashMap<>();
+//        map.put("user",user);
+//        String jwt = JwtUtils.createJwt(map);
+//        return ResultModel.valueOf(ResultCode.SUCCESS, jwt);
+//    }
 
-    @PostMapping( "/lUser")
-    public ResultModel<Boolean> lo( @RequestBody UserParam param) {
+    @PostMapping("/login")
+    public ResultModel<Boolean> login( @RequestBody UserParam param) {
         try {
             //密码加密 1.加密内容 2.盐值,3加密次数
             String md5Hash=new Md5Hash(param.getPassword(),param.getUsername(),3).toString();

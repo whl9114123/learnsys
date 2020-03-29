@@ -30,5 +30,6 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setUnauthorizedUrl("index?code=0");
         return shiroFilterFactoryBean;
     }
+//开启shiro注解支持
 
 }

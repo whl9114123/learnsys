@@ -34,15 +34,14 @@ file:
 
 
 
-
 learnsys:
   redis:
       open : false
 server:
-  port: 9001
+  port: 9002
 
 swagger:
-  host: localhost:9001
+  host: localhost:9002
   title: SpringBoot 整合 Swagger2
   description: 网站描述
   disabled: false # 是否禁用swagger
@@ -78,3 +77,6 @@ mybatis-plus:
 jackson:
   time-zone: GMT+8
   date-format: yyyy-MM-dd HH:mm:ss
+xhmm:
+  push:
+    name: aaa
