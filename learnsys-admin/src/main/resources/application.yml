@@ -1,5 +1,7 @@
 #配置数据源
+
 spring:
+
   devtools:
     restart:
       enabled: false  #设置开启热部署
@@ -39,6 +41,8 @@ learnsys:
       open : false
 server:
   port: 8888
+  servlet:
+    context-path: /learnsys
 
 swagger:
   host: localhost:8888

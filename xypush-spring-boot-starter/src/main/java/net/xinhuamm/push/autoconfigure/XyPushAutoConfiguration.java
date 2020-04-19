@@ -24,7 +24,7 @@ public class XyPushAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(PersonService.class)
-    @ConditionalOnProperty(prefix = "xhmm.push" ,name = "isOpen",havingValue = "true")// 当容器中没有指定Bean的情况下，自动配置PersonService类
+
     public PersonService personService(){
         PersonService personService = new personServiceImpl(properties);
         return personService;
