@@ -8,7 +8,7 @@ spring:
 #      additional-paths: src/main/java #重启目录
       exclude: WEB-INF/**
   redis:
-    host: 127.0.0.1
+    host: 120.26.179.189
     port: 6379
     database: 0
     timeout: 10S
@@ -38,7 +38,7 @@ file:
 
 learnsys:
   redis:
-      open : false
+      open : true
 server:
   port: 8888
   servlet:

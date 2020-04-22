@@ -1,5 +1,6 @@
 package com.whl.learnsys.cms.realm;
 
+import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.whl.common.models.SysMenuEntity;
 import com.whl.common.models.SysRoleEntity;
@@ -8,6 +9,7 @@ import com.whl.common.models.dto.UserDTO;
 import com.whl.common.service.SysMenuService;
 import com.whl.common.service.SysRoleService;
 import com.whl.common.service.SysUserService;
+import com.whl.common.util.JwtUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -15,9 +17,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CustomRealm extends AuthorizingRealm {
@@ -67,10 +68,18 @@ public class CustomRealm extends AuthorizingRealm {
         //
         UsernamePasswordToken upToken = (UsernamePasswordToken) authenticationToken;
         QueryWrapper<SysUserEntity> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", upToken.getUsername());
+        wrapper.eq("username", upToken.getUsername()).eq("password",upToken.getPassword());
         SysUserEntity user = sysUserService.getOne(wrapper);
-        if (user != null && user.getPassword().equals(upToken.getPassword())) {
+        if (user != null) {
             //登录成功
+            Map<String,Object> map =new HashMap<>();
+            user.setPassword(null);
+            map.put("user",user);
+
+            String jwt = JwtUtils.createJwt(map);
+
+
+
             QueryWrapper<SysRoleEntity> roleWrap = new QueryWrapper<>();
 
             Set<SysRoleEntity> roles = sysRoleService.getRolesById(user.getUserId());

@@ -1,25 +1,53 @@
 package com.whl.learnsys.cms.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.whl.common.enums.ResultCode;
+import com.whl.common.exception.RRException;
+import com.whl.common.models.ResultModel;
+import com.whl.common.param.UserParam;
+import com.whl.common.service.CacheService;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 @Api(tags = {"login"})
 @RestController
 @RequestMapping("/")
 public class LoginController {
     @Autowired
     DefaultKaptcha defaultKaptcha;
+    @Autowired
+    CacheService cacheService;
+
+
+    @PostMapping("/login")
+    public ResultModel<Boolean> login(@RequestBody UserParam param) {
+        try {
+            String gifcode = cacheService.getObject("gifcode", String.class);
+            if (!StringUtils.isBlank(gifcode) && gifcode.equals(param.getCode())) {
+                throw new RRException("验证码校验失败", 1001);
+            }
+            //密码加密 1.加密内容 2.盐值,3加密次数
+//            String md5Hash=new Md5Hash(param.getPassword(),param.getUsername(),3).toString();
+            UsernamePasswordToken upToken = new UsernamePasswordToken(param.getUsername(), param.getPassword());
+            Subject subject = SecurityUtils.getSubject();
+            subject.login(upToken);
+            return ResultModel.valueOf(ResultCode.SUCCESS, true, "登录成功");
+        } catch (Exception e) {
+            return ResultModel.valueOf(ResultCode.SUCCESS, false, "登录失败");
+        }
+    }
 
     /**
      * 获取验证码
@@ -32,14 +60,14 @@ public class LoginController {
         try {
             //生产验证码字符串并保存到session中
             String createText = defaultKaptcha.createText();
-
+            cacheService.setObjectMinutes("gifcode", createText, 10);
             //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
-            ImageIO.write(challenge,"jpg",jpegOutputStream);
-        } catch (IllegalArgumentException e){
+            ImageIO.write(challenge, "jpg", jpegOutputStream);
+        } catch (IllegalArgumentException e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         //定义response输出类型为image/jpeg类型，使用response输出流输出图片的byte数组

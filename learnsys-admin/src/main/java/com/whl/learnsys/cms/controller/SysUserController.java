@@ -108,19 +108,7 @@ public class SysUserController {
 //        return ResultModel.valueOf(ResultCode.SUCCESS, jwt);
 //    }
 
-    @PostMapping("/login")
-    public ResultModel<Boolean> login( @RequestBody UserParam param) {
-        try {
-            //密码加密 1.加密内容 2.盐值,3加密次数
-            String md5Hash=new Md5Hash(param.getPassword(),param.getUsername(),3).toString();
-            UsernamePasswordToken upToken = new UsernamePasswordToken(param.getUsername(), param.getPassword());
-            Subject subject = SecurityUtils.getSubject();
-            subject.login(upToken);
-        } catch (Exception e) {
 
-        }
-return null;
-    }
 
 
 

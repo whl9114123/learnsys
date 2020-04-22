@@ -41,16 +41,12 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
      *  2.从token中解析获取claims
      *  3.将claims绑定到request域中
      */
-
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 1.通过request获取请求token信息
-        String authorization = request.getHeader("Authorization");
-        //判断请求头信息是否为空，或者是否已Bearer开头
-        if(!StringUtils.isEmpty(authorization) && authorization.startsWith("Bearer")) {
-            //获取token数据
-            String token = authorization.replace("Bearer ","");
+        String token = request.getHeader("token");
+        //判断请求头信息是否为空
+        if(!StringUtils.isEmpty(token)) {
             //解析token获取claims
             Claims claims = JwtUtils.parseJwt(token);
             if(claims != null) {
