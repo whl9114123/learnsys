@@ -10,10 +10,7 @@ package com.whl.common.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.renren.common.utils.PageUtils;
-import io.renren.modules.sys.entity.SysRoleEntity;
-
-import java.util.Map;
+import com.whl.common.models.SysRoleEntity;
 
 
 /**
@@ -23,9 +20,8 @@ import java.util.Map;
  */
 public interface SysRoleService extends IService<SysRoleEntity> {
 
-	PageUtils queryPage(Map<String, Object> params);
 
-	void saveRole(SysRoleEntity role);
+    void saveRole(SysRoleEntity role);
 
 	void update(SysRoleEntity role);
 

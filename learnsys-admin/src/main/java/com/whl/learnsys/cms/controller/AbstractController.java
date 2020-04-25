@@ -8,7 +8,7 @@
 
 package com.whl.learnsys.cms.controller;
 
-import io.renren.modules.sys.entity.SysUserEntity;
+import com.whl.common.models.SysUserEntity;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

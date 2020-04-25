@@ -10,7 +10,7 @@ package com.whl.common.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.renren.modules.sys.entity.SysDeptEntity;
+import com.whl.common.models.SysDeptEntity;
 
 import java.util.List;
 import java.util.Map;

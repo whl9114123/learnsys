@@ -9,9 +9,9 @@
 package com.whl.common.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.renren.modules.sys.dao.SysRoleMenuDao;
-import io.renren.modules.sys.entity.SysRoleMenuEntity;
-import io.renren.modules.sys.service.SysRoleMenuService;
+import com.whl.common.mappers.SysRoleMenuDao;
+import com.whl.common.models.SysRoleMenuEntity;
+import com.whl.common.service.SysRoleMenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

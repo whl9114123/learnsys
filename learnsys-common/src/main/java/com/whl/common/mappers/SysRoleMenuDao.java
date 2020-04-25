@@ -9,7 +9,7 @@
 package com.whl.common.mappers;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.renren.modules.sys.entity.SysRoleMenuEntity;
+import com.whl.common.models.SysRoleMenuEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

@@ -8,9 +8,10 @@
 
 package com.whl.learnsys.cms.controller;
 
-import io.renren.common.utils.Constant;
-import io.renren.common.utils.R;
-import io.renren.modules.sys.service.SysDeptService;
+import com.whl.common.models.SysDeptEntity;
+import com.whl.common.service.SysDeptService;
+import com.whl.common.util.Constant;
+import com.whl.common.util.R;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

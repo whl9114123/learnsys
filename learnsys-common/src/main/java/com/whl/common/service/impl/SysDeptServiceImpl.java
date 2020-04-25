@@ -10,8 +10,8 @@ package com.whl.common.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.whl.common.mappers.SysDeptDao;
+import com.whl.common.models.SysDeptEntity;
 import com.whl.common.service.SysDeptService;
-import io.renren.common.annotation.DataFilter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,8 +23,8 @@ import java.util.Map;
 public class SysDeptServiceImpl extends ServiceImpl<SysDeptDao, SysDeptEntity> implements SysDeptService {
 
 	@Override
-	@DataFilter(subDept = true, user = false, tableAlias = "t1")
-	public List<SysDeptEntity> queryList(Map<String, Object> params) {
+
+    public List<SysDeptEntity> queryList(Map<String, Object> params) {
 		return baseMapper.queryList(params);
 	}
 

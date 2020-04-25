@@ -8,14 +8,11 @@
 
 package com.whl.learnsys.cms.controller;
 
-import io.renren.common.annotation.SysLog;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.R;
-import io.renren.common.validator.ValidatorUtils;
-import io.renren.modules.sys.entity.SysRoleEntity;
-import io.renren.modules.sys.service.SysRoleDeptService;
-import io.renren.modules.sys.service.SysRoleMenuService;
-import io.renren.modules.sys.service.SysRoleService;
+import com.whl.common.models.SysRoleEntity;
+import com.whl.common.service.SysRoleDeptService;
+import com.whl.common.service.SysRoleMenuService;
+import com.whl.common.service.SysRoleService;
+import com.whl.common.util.R;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +41,9 @@ public class SysRoleController extends AbstractController {
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:role:list")
 	public R list(@RequestParam Map<String, Object> params) {
-		PageUtils page = sysRoleService.queryPage(params);
 
-		return R.ok().put("page", page);
+
+		return R.ok().put("page", null);
 	}
 
 	/**
@@ -82,11 +79,11 @@ public class SysRoleController extends AbstractController {
 	/**
 	 * 保存角色
 	 */
-	@SysLog("保存角色")
+
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:role:save")
 	public R save(@RequestBody SysRoleEntity role) {
-		ValidatorUtils.validateEntity(role);
+
 
 		sysRoleService.saveRole(role);
 
@@ -96,11 +93,11 @@ public class SysRoleController extends AbstractController {
 	/**
 	 * 修改角色
 	 */
-	@SysLog("修改角色")
+
 	@RequestMapping("/update")
 	@RequiresPermissions("sys:role:update")
 	public R update(@RequestBody SysRoleEntity role) {
-		ValidatorUtils.validateEntity(role);
+
 
 		sysRoleService.update(role);
 
@@ -110,7 +107,7 @@ public class SysRoleController extends AbstractController {
 	/**
 	 * 删除角色
 	 */
-	@SysLog("删除角色")
+
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:role:delete")
 	public R delete(@RequestBody Long[] roleIds) {

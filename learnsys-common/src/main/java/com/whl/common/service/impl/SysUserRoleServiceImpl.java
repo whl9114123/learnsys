@@ -10,9 +10,9 @@ package com.whl.common.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.renren.modules.sys.dao.SysUserRoleDao;
-import io.renren.modules.sys.entity.SysUserRoleEntity;
-import io.renren.modules.sys.service.SysUserRoleService;
+import com.whl.common.mappers.SysUserRoleDao;
+import com.whl.common.models.SysUserRoleEntity;
+import com.whl.common.service.SysUserRoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

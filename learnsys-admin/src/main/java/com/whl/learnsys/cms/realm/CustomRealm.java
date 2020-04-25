@@ -1,8 +1,6 @@
 package com.whl.learnsys.cms.realm;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.whl.common.models.SysMenuEntity;
-import com.whl.common.models.SysRoleEntity;
 import com.whl.common.models.SysUserEntity;
 import com.whl.common.models.dto.UserDTO;
 import com.whl.common.service.SysMenuService;
@@ -15,8 +13,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CustomRealm extends AuthorizingRealm {
     @Autowired
@@ -69,14 +67,14 @@ public class CustomRealm extends AuthorizingRealm {
         SysUserEntity user = sysUserService.getOne(wrapper);
         String pwd = new String(upToken.getPassword());
         if (user != null && pwd.equals(user.getPassword())) {
-            //登录成功
-            Map<String,Object> map =new HashMap<>();
-            user.setPassword(null);
-            Set<SysRoleEntity> roles = sysRoleService.getRolesById(user.getUserId());
-            List<Long> roleIds = roles.stream().map(SysRoleEntity::getRoleId).collect(Collectors.toList());
-            Set<SysMenuEntity> permissions = sysMenuService.getPermissionByRoles(roleIds);
+//            //登录成功
+//            Map<String,Object> map =new HashMap<>();
+//            user.setPassword(null);
+//            Set<SysRoleEntity> roles = sysRoleService.getRolesById(user.getUserId());
+//            List<Long> roleIds = roles.stream().map(SysRoleEntity::getRoleId).collect(Collectors.toList());
+//            Set<SysMenuEntity> permissions = sysMenuService.getPermissionByRoles(roleIds);
             UserDTO userDTO = new UserDTO();
-            userDTO.setRoles(roles).setPermissions(permissions);
+//            userDTO.setRoles(roles).setPermissions(permissions);
             //安全数据，密码，realm域名
             return new SimpleAuthenticationInfo(userDTO, upToken.getPassword(), this.getName());
         } else {

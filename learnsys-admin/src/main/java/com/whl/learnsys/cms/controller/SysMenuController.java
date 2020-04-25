@@ -8,13 +8,12 @@
 
 package com.whl.learnsys.cms.controller;
 
-import io.renren.common.annotation.SysLog;
-import io.renren.common.exception.RRException;
-import io.renren.common.utils.Constant;
-import io.renren.common.utils.R;
-import io.renren.modules.sys.entity.SysMenuEntity;
-import io.renren.modules.sys.service.SysMenuService;
-import org.apache.commons.lang.StringUtils;
+import com.whl.common.exception.RRException;
+import com.whl.common.models.SysMenuEntity;
+import com.whl.common.service.SysMenuService;
+import com.whl.common.util.Constant;
+import com.whl.common.util.R;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -94,7 +93,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 保存
      */
-    @SysLog("保存菜单")
+
     @RequestMapping("/save")
     @RequiresPermissions("sys:menu:save")
     public R save(@RequestBody SysMenuEntity menu) {
@@ -109,7 +108,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 修改
      */
-    @SysLog("修改菜单")
+
     @RequestMapping("/update")
     @RequiresPermissions("sys:menu:update")
     public R update(@RequestBody SysMenuEntity menu) {
@@ -124,7 +123,7 @@ public class SysMenuController extends AbstractController {
     /**
      * 删除
      */
-    @SysLog("删除菜单")
+
     @RequestMapping("/delete")
     @RequiresPermissions("sys:menu:delete")
     public R delete(long menuId) {

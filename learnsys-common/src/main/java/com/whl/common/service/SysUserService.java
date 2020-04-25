@@ -15,6 +15,8 @@ import java.util.List;
 public interface SysUserService extends IService<SysUserEntity> {
 
 
-    List<SysUserEntity> queryList();
+    List<Long> queryAllMenuId(Long userId);
+
+    boolean updatePassword(Long userId, String password, String newPassword);
 }
 

@@ -9,18 +9,11 @@
 package com.whl.learnsys.cms.controller;
 
 
-import io.renren.common.annotation.SysLog;
-import io.renren.common.utils.PageUtils;
-import io.renren.common.utils.R;
-import io.renren.common.validator.Assert;
-import io.renren.common.validator.ValidatorUtils;
-import io.renren.common.validator.group.AddGroup;
-import io.renren.common.validator.group.UpdateGroup;
-import io.renren.modules.sys.entity.SysUserEntity;
-import io.renren.modules.sys.service.SysUserRoleService;
-import io.renren.modules.sys.service.SysUserService;
-import io.renren.modules.sys.shiro.ShiroUtils;
-import org.apache.commons.lang.ArrayUtils;
+import com.whl.common.models.SysUserEntity;
+import com.whl.common.service.SysUserRoleService;
+import com.whl.common.service.SysUserService;
+import com.whl.common.util.R;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +41,9 @@ public class SysUserController extends AbstractController {
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:user:list")
 	public R list(@RequestParam Map<String, Object> params) {
-		PageUtils page = sysUserService.queryPage(params);
 
-		return R.ok().put("page", page);
+
+		return R.ok().put("page", null);
 	}
 
 	/**
@@ -64,15 +57,9 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 修改登录用户密码
 	 */
-	@SysLog("修改密码")
+
 	@RequestMapping("/password")
 	public R password(String password, String newPassword) {
-		Assert.isBlank(newPassword, "新密码不为能空");
-
-		//原密码
-		password = ShiroUtils.sha256(password, getUser().getSalt());
-		//新密码
-		newPassword = ShiroUtils.sha256(newPassword, getUser().getSalt());
 
 		//更新密码
 		boolean flag = sysUserService.updatePassword(getUserId(), password, newPassword);
@@ -101,13 +88,11 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 保存用户
 	 */
-	@SysLog("保存用户")
+
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:user:save")
 	public R save(@RequestBody SysUserEntity user) {
-		ValidatorUtils.validateEntity(user, AddGroup.class);
 
-		sysUserService.saveUser(user);
 
 		return R.ok();
 	}
@@ -115,13 +100,11 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 修改用户
 	 */
-	@SysLog("修改用户")
+
 	@RequestMapping("/update")
 	@RequiresPermissions("sys:user:update")
 	public R update(@RequestBody SysUserEntity user) {
-		ValidatorUtils.validateEntity(user, UpdateGroup.class);
 
-		sysUserService.update(user);
 
 		return R.ok();
 	}
@@ -129,7 +112,6 @@ public class SysUserController extends AbstractController {
 	/**
 	 * 删除用户
 	 */
-	@SysLog("删除用户")
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:user:delete")
 	public R delete(@RequestBody Long[] userIds) {

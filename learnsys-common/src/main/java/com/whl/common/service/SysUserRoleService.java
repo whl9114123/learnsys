@@ -9,7 +9,7 @@
 package com.whl.common.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import io.renren.modules.sys.entity.SysUserRoleEntity;
+import com.whl.common.models.SysUserRoleEntity;
 
 import java.util.List;
 
