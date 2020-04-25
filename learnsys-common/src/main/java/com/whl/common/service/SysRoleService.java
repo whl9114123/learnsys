@@ -1,20 +1,34 @@
+/**
+ * Copyright (c) 2016-2019 人人开源 All rights reserved.
+ * <p>
+ * https://www.renren.io
+ * <p>
+ * 版权所有，侵权必究！
+ */
+
 package com.whl.common.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.whl.common.models.SysRoleEntity;
 
-import java.util.Set;
+import com.baomidou.mybatisplus.extension.service.IService;
+import io.renren.common.utils.PageUtils;
+import io.renren.modules.sys.entity.SysRoleEntity;
+
+import java.util.Map;
+
 
 /**
  * 角色
  *
- * @author Mark
- * @email sunlightcs@gmail.com
- * @date 2020-03-07 18:18:34
+ * @author Mark sunlightcs@gmail.com
  */
 public interface SysRoleService extends IService<SysRoleEntity> {
 
+	PageUtils queryPage(Map<String, Object> params);
 
-    Set<SysRoleEntity> getRolesById(Long userId);
+	void saveRole(SysRoleEntity role);
+
+	void update(SysRoleEntity role);
+
+	void deleteBatch(Long[] roleIds);
+
 }
-

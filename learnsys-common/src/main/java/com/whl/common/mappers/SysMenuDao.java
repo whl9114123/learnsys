@@ -1,21 +1,37 @@
+/**
+ * Copyright (c) 2016-2019 人人开源 All rights reserved.
+ * <p>
+ * https://www.renren.io
+ * <p>
+ * 版权所有，侵权必究！
+ */
+
 package com.whl.common.mappers;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.whl.common.models.SysMenuEntity;
+import io.renren.modules.sys.entity.SysMenuEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 菜单管理
- * 
- * @author Mark
- * @email sunlightcs@gmail.com
- * @date 2020-03-07 18:18:34
+ *
+ * @author Mark sunlightcs@gmail.com
  */
 @Mapper
 public interface SysMenuDao extends BaseMapper<SysMenuEntity> {
 
-    Set<SysMenuEntity> getPermissionByRoles(List<Long> roleIds);
+    /**
+     * 根据父菜单，查询子菜单
+     *
+     * @param parentId 父菜单ID
+     */
+    List<SysMenuEntity> queryListParentId(Long parentId);
+
+    /**
+     * 获取不包含按钮的菜单列表
+     */
+    List<SysMenuEntity> queryNotButtonList();
+
 }

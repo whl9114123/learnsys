@@ -1,81 +1,189 @@
+/**
+ * Copyright (c) 2016-2019 人人开源 All rights reserved.
+ * <p>
+ * https://www.renren.io
+ * <p>
+ * 版权所有，侵权必究！
+ */
+
 package com.whl.learnsys.cms.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.whl.common.enums.ResultCode;
-import com.whl.common.models.ResultModel;
-import com.whl.common.models.SysMenuEntity;
-import com.whl.common.models.SysRoleEntity;
-import com.whl.common.models.SysUserEntity;
-import com.whl.common.param.PageParam;
-import com.whl.common.service.SysMenuService;
-import com.whl.common.util.DozerUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.renren.common.annotation.SysLog;
+import io.renren.common.exception.RRException;
+import io.renren.common.utils.Constant;
+import io.renren.common.utils.R;
+import io.renren.modules.sys.entity.SysMenuEntity;
+import io.renren.modules.sys.service.SysMenuService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 /**
- * @author wuhuanling
+ * 系统菜单
+ *
+ * @author Mark sunlightcs@gmail.com
  */
-@Api(tags = "权限管理")
 @RestController
-@RequestMapping("sys/menu")
-public class SysMenuController {
+@RequestMapping("/sys/menu")
+public class SysMenuController extends AbstractController {
     @Autowired
     private SysMenuService sysMenuService;
 
+    /**
+     * 导航菜单
+     */
+    @RequestMapping("/nav")
+    public R nav() {
+        List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(getUserId());
+        return R.ok().put("menuList", menuList);
+    }
 
-    @ApiOperation(value = "获取角色列表")
-    @PostMapping( "/list")
-    public ResultModel<Page<SysMenuEntity>> list(@RequestBody PageParam pageParam) {
-
-        Page<SysMenuEntity> page=new Page<>(pageParam.getCurrent(),pageParam.getSize());
-        Page<SysMenuEntity> page1 =sysMenuService.page(page);
-        int hasMore=0;
-        if(page1.getPages()>=pageParam.getCurrent()) {
-            hasMore=1;
+    /**
+     * 所有菜单列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("sys:menu:list")
+    public List<SysMenuEntity> list() {
+        List<SysMenuEntity> menuList = sysMenuService.list();
+        for (SysMenuEntity sysMenuEntity : menuList) {
+            SysMenuEntity parentMenuEntity = sysMenuService.getById(sysMenuEntity.getParentId());
+            if (parentMenuEntity != null) {
+                sysMenuEntity.setParentName(parentMenuEntity.getName());
+            }
         }
 
-
-        return ResultModel.valueOf(ResultCode.FAILURE,page1,null,hasMore);
+        return menuList;
     }
 
-    @ApiOperation(value = "获取角色详情")
+    /**
+     * 选择菜单(添加、修改菜单)
+     */
+    @RequestMapping("/select")
+    @RequiresPermissions("sys:menu:select")
+    public R select() {
+        //查询列表数据
+        List<SysMenuEntity> menuList = sysMenuService.queryNotButtonList();
 
-    @GetMapping( "/{id}")
-    public ResultModel<SysMenuEntity> detail( @PathVariable("id") Long id) {
+        //添加顶级菜单
+        SysMenuEntity root = new SysMenuEntity();
+        root.setMenuId(0L);
+        root.setName("一级菜单");
+        root.setParentId(-1L);
+        root.setOpen(true);
+        menuList.add(root);
 
-        SysMenuEntity sysMenuEntity = sysMenuService.getById(id);
-
-
-        return ResultModel.valueOf(ResultCode.SUCCESS,sysMenuEntity);
+        return R.ok().put("menuList", menuList);
     }
 
-    @ApiOperation(value = "删除角色", notes = "删除角色")
-    @DeleteMapping( "/{id}")
-    public ResultModel<Boolean> delete( @PathVariable("id") Long id) {
-        QueryWrapper<SysMenuEntity> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("user_id",id);
-        boolean b = sysMenuService.removeById(id);
-        if (!b){
-            return ResultModel.valueOf(ResultCode.FAILURE, false);
+    /**
+     * 菜单信息
+     */
+    @RequestMapping("/info/{menuId}")
+    @RequiresPermissions("sys:menu:info")
+    public R info(@PathVariable("menuId") Long menuId) {
+        SysMenuEntity menu = sysMenuService.getById(menuId);
+        return R.ok().put("menu", menu);
+    }
+
+    /**
+     * 保存
+     */
+    @SysLog("保存菜单")
+    @RequestMapping("/save")
+    @RequiresPermissions("sys:menu:save")
+    public R save(@RequestBody SysMenuEntity menu) {
+        //数据校验
+        verifyForm(menu);
+
+        sysMenuService.save(menu);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @SysLog("修改菜单")
+    @RequestMapping("/update")
+    @RequiresPermissions("sys:menu:update")
+    public R update(@RequestBody SysMenuEntity menu) {
+        //数据校验
+        verifyForm(menu);
+
+        sysMenuService.updateById(menu);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @SysLog("删除菜单")
+    @RequestMapping("/delete")
+    @RequiresPermissions("sys:menu:delete")
+    public R delete(long menuId) {
+        if (menuId <= 31) {
+            return R.error("系统菜单，不能删除");
         }
-        return ResultModel.valueOf(ResultCode.SUCCESS, true);
-    }
-    @ApiOperation(value = "添加角色")
-    @ApiImplicitParam(name = "userParam", value = "参数", required = true, dataType = "UserParam")
-    @PostMapping( "/addUser")
-    public ResultModel<Boolean> insert( @RequestBody SysMenuEntity sysMenuEntity) {
-        SysMenuEntity sysRoleEntity1 = DozerUtil.mapper(sysMenuEntity, SysMenuEntity.class);
-        boolean b = sysMenuService.save(sysRoleEntity1);
-        if (!b){
-            return ResultModel.valueOf(ResultCode.FAILURE, false);
+
+        //判断是否有子菜单或按钮
+        List<SysMenuEntity> menuList = sysMenuService.queryListParentId(menuId);
+        if (menuList.size() > 0) {
+            return R.error("请先删除子菜单或按钮");
         }
-        return ResultModel.valueOf(ResultCode.SUCCESS, true);
+
+        sysMenuService.delete(menuId);
+
+        return R.ok();
     }
 
+    /**
+     * 验证参数是否正确
+     */
+    private void verifyForm(SysMenuEntity menu) {
+        if (StringUtils.isBlank(menu.getName())) {
+            throw new RRException("菜单名称不能为空");
+        }
 
+        if (menu.getParentId() == null) {
+            throw new RRException("上级菜单不能为空");
+        }
+
+        //菜单
+        if (menu.getType() == Constant.MenuType.MENU.getValue()) {
+            if (StringUtils.isBlank(menu.getUrl())) {
+                throw new RRException("菜单URL不能为空");
+            }
+        }
+
+        //上级菜单类型
+        int parentType = Constant.MenuType.CATALOG.getValue();
+        if (menu.getParentId() != 0) {
+            SysMenuEntity parentMenu = sysMenuService.getById(menu.getParentId());
+            parentType = parentMenu.getType();
+        }
+
+        //目录、菜单
+        if (menu.getType() == Constant.MenuType.CATALOG.getValue() ||
+                menu.getType() == Constant.MenuType.MENU.getValue()) {
+            if (parentType != Constant.MenuType.CATALOG.getValue()) {
+                throw new RRException("上级菜单只能为目录类型");
+            }
+            return;
+        }
+
+        //按钮
+        if (menu.getType() == Constant.MenuType.BUTTON.getValue()) {
+            if (parentType != Constant.MenuType.MENU.getValue()) {
+                throw new RRException("上级菜单只能为菜单类型");
+            }
+            return;
+        }
+    }
 }

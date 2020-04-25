@@ -3,12 +3,5 @@
 
 <mapper namespace="com.whl.common.mappers.SysRoleDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
 
-
-	<select id="selectRolesByUserId" resultType="com.whl.common.models.SysRoleEntity">
-		select  b.* from sys_role a left join sys_user_role b  on a.id=b.role_id where b.user_id=#{userId}
-
-
-	</select>
 </mapper>

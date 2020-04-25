@@ -9,29 +9,26 @@
 package com.whl.common.mappers;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.entity.SysRoleMenuEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 /**
- * 系统用户
+ * 角色与菜单对应关系
  *
  * @author Mark sunlightcs@gmail.com
  */
 @Mapper
-public interface SysUserDao extends BaseMapper<SysUserEntity> {
+public interface SysRoleMenuDao extends BaseMapper<SysRoleMenuEntity> {
 
     /**
-     * 查询用户的所有权限
-     *
-     * @param userId 用户ID
+     * 根据角色ID，获取菜单ID列表
      */
-    List<String> queryAllPerms(Long userId);
+    List<Long> queryMenuIdList(Long roleId);
 
     /**
-     * 查询用户的所有菜单ID
+     * 根据角色ID数组，批量删除
      */
-    List<Long> queryAllMenuId(Long userId);
-
+    int deleteBatch(Long[] roleIds);
 }

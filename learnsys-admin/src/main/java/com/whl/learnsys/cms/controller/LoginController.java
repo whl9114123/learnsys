@@ -2,12 +2,10 @@ package com.whl.learnsys.cms.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.whl.common.enums.ResultCode;
-import com.whl.common.exception.RRException;
 import com.whl.common.models.ResultModel;
 import com.whl.common.param.UserParam;
 import com.whl.common.service.CacheService;
 import io.swagger.annotations.Api;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -32,20 +30,21 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public ResultModel<Boolean> login(@RequestBody UserParam param) {
+    public ResultModel<String> login(@RequestBody UserParam param) {
         try {
-            String gifcode = cacheService.getObject("gifcode", String.class);
-            if (!StringUtils.isBlank(gifcode) && gifcode.equals(param.getCode())) {
-                throw new RRException("验证码校验失败", 1001);
-            }
+//            String gifcode = cacheService.getObject("gifcode", String.class);
+//            if (!StringUtils.isBlank(gifcode) && gifcode.equals(param.getCode())) {
+//               ResultModel.valueOf(ResultCode.false, null, "验证码校验失败");
+//            }
             //密码加密 1.加密内容 2.盐值,3加密次数
 //            String md5Hash=new Md5Hash(param.getPassword(),param.getUsername(),3).toString();
             UsernamePasswordToken upToken = new UsernamePasswordToken(param.getUsername(), param.getPassword());
             Subject subject = SecurityUtils.getSubject();
             subject.login(upToken);
-            return ResultModel.valueOf(ResultCode.SUCCESS, true, "登录成功");
+            String sessionId = (String) subject.getSession().getId();
+            return ResultModel.valueOf(ResultCode.SUCCESS, sessionId, "登录成功");
         } catch (Exception e) {
-            return ResultModel.valueOf(ResultCode.SUCCESS, false, "登录失败");
+            return ResultModel.valueOf(ResultCode.SUCCESS, null, "登录失败");
         }
     }
 

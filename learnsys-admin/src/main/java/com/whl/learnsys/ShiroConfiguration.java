@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,37 +50,26 @@ public class ShiroConfiguration {
     //Filter工厂，设置对应的过滤条件和跳转条件
     @Bean
     public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
-        //1.创建shiro过滤器工厂
+        //1.创建过滤器工厂
         ShiroFilterFactoryBean filterFactory = new ShiroFilterFactoryBean();
         //2.设置安全管理器
         filterFactory.setSecurityManager(securityManager);
-        //3.通用配置（配置登录页面，登录成功页面，验证未成功页面）
-        filterFactory.setLoginUrl("/autherror?code=1"); //设置登录页面
-        filterFactory.setUnauthorizedUrl("/autherror?code=2"); //授权失败跳转页面
-        //4.配置过滤器集合
-        /**
-         * key  ：访问连接
-         *      支持通配符的形式
-         * value：过滤器类型
-         *      shiro常用过滤器
-         *          anno    ：匿名访问（表明此链接所有人可以访问）
-         *          authc   ：认证后访问（表明此链接需登录认证成功之后可以访问）
-         */
-        Map<String,String> filterMap = new LinkedHashMap<String,String>();
-        //配置请求连接过滤器配置
-        //匿名访问（所有人员可以使用）
-        filterMap.put("/user/home", "anon");
-        //具有指定权限访问
-        //filterMap.put("/user/find", "perms[user-find]");
-        //认证之后访问（登录之后可以访问）
-        filterMap.put("/user/**", "authc");
-        //具有指定角色可以访问
-        filterMap.put("/user/**", "roles[系统管理员]");
-
-
-        //5.设置过滤器
+        //3.通用配置（跳转登录页面，未授权跳转的页面）
+        filterFactory.setLoginUrl("/autherror?code=1");//跳转url地址
+        filterFactory.setUnauthorizedUrl("/autherror?code=2");//未授权的url
+        //4.设置过滤器集合
+        Map<String, String> filterMap = new LinkedHashMap<>();
+        //anon -- 匿名访问
+//        filterMap.put("/login","anon");
+        filterMap.put("/autherror", "anon");
+        //注册
+        //authc -- 认证之后访问（登录）
+        filterMap.put("/sys/**", "authc");
+        //perms -- 具有某中权限 (使用注解配置授权)
         filterFactory.setFilterChainDefinitionMap(filterMap);
+
         return filterFactory;
+
     }
 
     //配置shiro注解支持

@@ -1,6 +1,5 @@
 package com.whl.learnsys.cms.realm;
 
-import com.auth0.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.whl.common.models.SysMenuEntity;
 import com.whl.common.models.SysRoleEntity;
@@ -9,7 +8,6 @@ import com.whl.common.models.dto.UserDTO;
 import com.whl.common.service.SysMenuService;
 import com.whl.common.service.SysRoleService;
 import com.whl.common.service.SysUserService;
-import com.whl.common.util.JwtUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -17,7 +15,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,29 +65,23 @@ public class CustomRealm extends AuthorizingRealm {
         //
         UsernamePasswordToken upToken = (UsernamePasswordToken) authenticationToken;
         QueryWrapper<SysUserEntity> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", upToken.getUsername()).eq("password",upToken.getPassword());
+        wrapper.eq("username", upToken.getUsername());
         SysUserEntity user = sysUserService.getOne(wrapper);
-        if (user != null) {
+        String pwd = new String(upToken.getPassword());
+        if (user != null && pwd.equals(user.getPassword())) {
             //登录成功
             Map<String,Object> map =new HashMap<>();
             user.setPassword(null);
-            map.put("user",user);
-
-            String jwt = JwtUtils.createJwt(map);
-
-
-
-            QueryWrapper<SysRoleEntity> roleWrap = new QueryWrapper<>();
-
             Set<SysRoleEntity> roles = sysRoleService.getRolesById(user.getUserId());
             List<Long> roleIds = roles.stream().map(SysRoleEntity::getRoleId).collect(Collectors.toList());
             Set<SysMenuEntity> permissions = sysMenuService.getPermissionByRoles(roleIds);
             UserDTO userDTO = new UserDTO();
             userDTO.setRoles(roles).setPermissions(permissions);
             //安全数据，密码，realm域名
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(userDTO, user.getPassword(), this.getName());
-            return info;
+            return new SimpleAuthenticationInfo(userDTO, upToken.getPassword(), this.getName());
+        } else {
+            return null;
         }
-        return null;
+
     }
 }

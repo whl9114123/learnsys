@@ -1,83 +1,121 @@
+/**
+ * Copyright (c) 2016-2019 人人开源 All rights reserved.
+ * <p>
+ * https://www.renren.io
+ * <p>
+ * 版权所有，侵权必究！
+ */
+
 package com.whl.learnsys.cms.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.whl.common.enums.ResultCode;
-import com.whl.common.models.ResultModel;
-import com.whl.common.models.SysRoleEntity;
-import com.whl.common.models.SysUserEntity;
-import com.whl.common.param.PageParam;
-import com.whl.common.param.UserParam;
-import com.whl.common.service.SysRoleService;
-import com.whl.common.util.DozerUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.renren.common.annotation.SysLog;
+import io.renren.common.utils.PageUtils;
+import io.renren.common.utils.R;
+import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.sys.entity.SysRoleEntity;
+import io.renren.modules.sys.service.SysRoleDeptService;
+import io.renren.modules.sys.service.SysRoleMenuService;
+import io.renren.modules.sys.service.SysRoleService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.Role;
+import java.util.List;
+import java.util.Map;
+
 /**
- * @author wuhuanling
+ * 角色管理
+ *
+ * @author Mark sunlightcs@gmail.com
  */
-
-@Api(tags = {"角色管理模块"})
 @RestController
-@RequestMapping("sys/role")
-public class SysRoleController {
-    @Autowired
-    private SysRoleService sysRoleService;
+@RequestMapping("/sys/role")
+public class SysRoleController extends AbstractController {
+	@Autowired
+	private SysRoleService sysRoleService;
+	@Autowired
+	private SysRoleMenuService sysRoleMenuService;
+	@Autowired
+	private SysRoleDeptService sysRoleDeptService;
 
+	/**
+	 * 角色列表
+	 */
+	@RequestMapping("/list")
+	@RequiresPermissions("sys:role:list")
+	public R list(@RequestParam Map<String, Object> params) {
+		PageUtils page = sysRoleService.queryPage(params);
 
-    @ApiOperation(value = "获取角色列表")
-    @PostMapping( "/list")
-    public ResultModel<Page<SysRoleEntity>> list(@RequestBody PageParam pageParam) {
+		return R.ok().put("page", page);
+	}
 
-        Page<SysRoleEntity> page=new Page<>(pageParam.getCurrent(),pageParam.getSize());
-        Page<SysRoleEntity> page1 =sysRoleService.page(page);
-        int hasMore=0;
-        if(page1.getPages()>=pageParam.getCurrent()) {
-            hasMore=1;
-        }
+	/**
+	 * 角色列表
+	 */
+	@RequestMapping("/select")
+	@RequiresPermissions("sys:role:select")
+	public R select() {
+		List<SysRoleEntity> list = sysRoleService.list();
 
+		return R.ok().put("list", list);
+	}
 
-        return ResultModel.valueOf(ResultCode.FAILURE,page1,null,hasMore);
-    }
+	/**
+	 * 角色信息
+	 */
+	@RequestMapping("/info/{roleId}")
+	@RequiresPermissions("sys:role:info")
+	public R info(@PathVariable("roleId") Long roleId) {
+		SysRoleEntity role = sysRoleService.getById(roleId);
 
-    @ApiOperation(value = "获取角色详情")
+		//查询角色对应的菜单
+		List<Long> menuIdList = sysRoleMenuService.queryMenuIdList(roleId);
+		role.setMenuIdList(menuIdList);
 
-    @GetMapping( "/{id}")
-    public ResultModel<SysRoleEntity> detail( @PathVariable("id") Long id) {
+		//查询角色对应的部门
+		List<Long> deptIdList = sysRoleDeptService.queryDeptIdList(new Long[]{roleId});
+		role.setDeptIdList(deptIdList);
 
-        SysRoleEntity sysRoleEntity = sysRoleService.getById(id);
+		return R.ok().put("role", role);
+	}
 
+	/**
+	 * 保存角色
+	 */
+	@SysLog("保存角色")
+	@RequestMapping("/save")
+	@RequiresPermissions("sys:role:save")
+	public R save(@RequestBody SysRoleEntity role) {
+		ValidatorUtils.validateEntity(role);
 
-        return ResultModel.valueOf(ResultCode.SUCCESS,sysRoleEntity);
-    }
+		sysRoleService.saveRole(role);
 
-    @ApiOperation(value = "删除角色", notes = "删除角色")
-    @DeleteMapping( "/{id}")
-    public ResultModel<Boolean> delete( @PathVariable("id") Long id) {
-        QueryWrapper<SysUserEntity> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("user_id",id);
-        boolean b = sysRoleService.removeById(id);
-        if (!b){
-            return ResultModel.valueOf(ResultCode.FAILURE, false);
-        }
-        return ResultModel.valueOf(ResultCode.SUCCESS, true);
-    }
-    @ApiOperation(value = "添加角色")
-    @ApiImplicitParam(name = "userParam", value = "参数", required = true, dataType = "UserParam")
-    @PostMapping( "/addUser")
-    public ResultModel<Boolean> insert( @RequestBody SysRoleEntity sysRoleEntity) {
-        SysRoleEntity sysRoleEntity1 = DozerUtil.mapper(sysRoleEntity, SysRoleEntity.class);
-        boolean b = sysRoleService.save(sysRoleEntity1);
-        if (!b){
-            return ResultModel.valueOf(ResultCode.FAILURE, false);
-        }
-        return ResultModel.valueOf(ResultCode.SUCCESS, true);
-    }
+		return R.ok();
+	}
 
+	/**
+	 * 修改角色
+	 */
+	@SysLog("修改角色")
+	@RequestMapping("/update")
+	@RequiresPermissions("sys:role:update")
+	public R update(@RequestBody SysRoleEntity role) {
+		ValidatorUtils.validateEntity(role);
 
+		sysRoleService.update(role);
 
+		return R.ok();
+	}
+
+	/**
+	 * 删除角色
+	 */
+	@SysLog("删除角色")
+	@RequestMapping("/delete")
+	@RequiresPermissions("sys:role:delete")
+	public R delete(@RequestBody Long[] roleIds) {
+		sysRoleService.deleteBatch(roleIds);
+
+		return R.ok();
+	}
 }

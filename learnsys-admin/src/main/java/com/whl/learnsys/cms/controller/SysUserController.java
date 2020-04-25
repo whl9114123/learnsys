@@ -1,115 +1,148 @@
+/**
+ * Copyright (c) 2016-2019 人人开源 All rights reserved.
+ * <p>
+ * https://www.renren.io
+ * <p>
+ * 版权所有，侵权必究！
+ */
+
 package com.whl.learnsys.cms.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.whl.common.enums.ResultCode;
-import com.whl.common.models.ResultModel;
-import com.whl.common.models.SysUserEntity;
-import com.whl.common.param.PageParam;
-import com.whl.common.param.UserParam;
-import com.whl.common.service.CacheService;
-import com.whl.common.service.SysUserService;
-import com.whl.common.util.DozerUtil;
-import com.whl.common.util.JwtUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.crypto.hash.Md5Hash;
-import org.apache.shiro.subject.Subject;
+
+import io.renren.common.annotation.SysLog;
+import io.renren.common.utils.PageUtils;
+import io.renren.common.utils.R;
+import io.renren.common.validator.Assert;
+import io.renren.common.validator.ValidatorUtils;
+import io.renren.common.validator.group.AddGroup;
+import io.renren.common.validator.group.UpdateGroup;
+import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysUserRoleService;
+import io.renren.modules.sys.service.SysUserService;
+import io.renren.modules.sys.shiro.ShiroUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
-
-@Api(tags = {"用户管理模块"})
+/**
+ * 系统用户
+ *
+ * @author Mark sunlightcs@gmail.com
+ */
 @RestController
-@RequestMapping("sys/user")
-public class SysUserController {
+@RequestMapping("/sys/user")
+public class SysUserController extends AbstractController {
+	@Autowired
+	private SysUserService sysUserService;
+	@Autowired
+	private SysUserRoleService sysUserRoleService;
 
-    @Autowired
-    private SysUserService sysUserService;
-    @Autowired
-    private CacheService cacheService;
+	/**
+	 * 所有用户列表
+	 */
+	@RequestMapping("/list")
+	@RequiresPermissions("sys:user:list")
+	public R list(@RequestParam Map<String, Object> params) {
+		PageUtils page = sysUserService.queryPage(params);
 
-    @ApiOperation(value = "获取用户列表", notes = "获取用户列表")
-    @ApiImplicitParam(name = "pageParam", value = "获取参数", required = true, dataType = "PageParam")
-    @PostMapping( "/list")
-    public ResultModel<Page<SysUserEntity>> list(@RequestBody PageParam pageParam) {
+		return R.ok().put("page", page);
+	}
 
-        Page<SysUserEntity> page = new Page<>(pageParam.getCurrent(), pageParam.getSize());
-        Page<SysUserEntity> page1 = sysUserService.page(page);
-        int hasMore = 0;
-        if (page1.getPages() >= pageParam.getCurrent()) {
-            hasMore = 1;
-        }
+	/**
+	 * 获取登录的用户信息
+	 */
+	@RequestMapping("/info")
+	public R info() {
+		return R.ok().put("user", getUser());
+	}
 
+	/**
+	 * 修改登录用户密码
+	 */
+	@SysLog("修改密码")
+	@RequestMapping("/password")
+	public R password(String password, String newPassword) {
+		Assert.isBlank(newPassword, "新密码不为能空");
 
-        return ResultModel.valueOf(ResultCode.FAILURE,page1,null,hasMore);
-    }
+		//原密码
+		password = ShiroUtils.sha256(password, getUser().getSalt());
+		//新密码
+		newPassword = ShiroUtils.sha256(newPassword, getUser().getSalt());
 
-    @ApiOperation(value = "获取用户", notes = "获取用户")
-    @ApiImplicitParam(name = "id", value = " 参数", required = true, dataType = "Long")
+		//更新密码
+		boolean flag = sysUserService.updatePassword(getUserId(), password, newPassword);
+		if (!flag) {
+			return R.error("原密码不正确");
+		}
 
-    @GetMapping("/{id}")
-    public ResultModel<SysUserEntity> getUser(@PathVariable("id") Long id) {
-        String key = "user:" + id;
-        SysUserEntity user = cacheService.getObject(key, SysUserEntity.class);
-        if (ObjectUtils.isEmpty(user)) {
-            user = sysUserService.getById(id);
-            cacheService.setObject(key, user);
-        }
+		return R.ok();
+	}
 
+	/**
+	 * 用户信息
+	 */
+	@RequestMapping("/info/{userId}")
+	@RequiresPermissions("sys:user:info")
+	public R info(@PathVariable("userId") Long userId) {
+		SysUserEntity user = sysUserService.getById(userId);
 
+		//获取用户所属的角色列表
+		List<Long> roleIdList = sysUserRoleService.queryRoleIdList(userId);
+		user.setRoleIdList(roleIdList);
 
+		return R.ok().put("user", user);
+	}
 
-        return ResultModel.valueOf(ResultCode.SUCCESS,user);
-    }
+	/**
+	 * 保存用户
+	 */
+	@SysLog("保存用户")
+	@RequestMapping("/save")
+	@RequiresPermissions("sys:user:save")
+	public R save(@RequestBody SysUserEntity user) {
+		ValidatorUtils.validateEntity(user, AddGroup.class);
 
-    @ApiOperation(value = "删除用户", notes = "获取用户")
-    @ApiImplicitParam(name = "id", value = " 参数", required = true, dataType = "Long")
-    @DeleteMapping("/{id}")
-    public ResultModel<Boolean> deleteUser(@PathVariable("id") Long id) {
-        QueryWrapper<SysUserEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id", id);
-        boolean b = sysUserService.removeById(id);
-        if (!b) {
-            return ResultModel.valueOf(ResultCode.FAILURE, false);
-        }
-        return ResultModel.valueOf(ResultCode.SUCCESS, true);
-    }
-    @ApiOperation(value = "添加用户", notes = "添加用户")
-    @PostMapping("/addUser")
-    public ResultModel<Boolean> insertUser(@RequestBody UserParam userParam) {
-        SysUserEntity sysUserEntity = DozerUtil.mapper(userParam, SysUserEntity.class);
-        boolean b = sysUserService.save(sysUserEntity);
-        if (!b) {
-            return ResultModel.valueOf(ResultCode.FAILURE, false);
-        }
-        return ResultModel.valueOf(ResultCode.SUCCESS, true);
-    }
-//    @ApiOperation(value = "登录", notes = "添加用户")
-//    @PostMapping("/login")
-//    public ResultModel<String> login(@RequestBody UserParam userParam) {
-//        SysUserEntity sysUserEntity = DozerUtil.mapper(userParam, SysUserEntity.class);
-//        QueryWrapper<SysUserEntity> queryWrapper=new QueryWrapper<>();
-//        queryWrapper.eq("username",userParam.getUsername()).eq("password",userParam.getPassword());
-//        SysUserEntity user = sysUserService.getOne(queryWrapper);
-//        if (ObjectUtils.isEmpty(user)){
-//            return ResultModel.valueOf(ResultCode.FAILURE,null);
-//        }
-//     Map<String,Object> map=  new HashMap<>();
-//        map.put("user",user);
-//        String jwt = JwtUtils.createJwt(map);
-//        return ResultModel.valueOf(ResultCode.SUCCESS, jwt);
-//    }
+		sysUserService.saveUser(user);
 
+		return R.ok();
+	}
 
+	/**
+	 * 修改用户
+	 */
+	@SysLog("修改用户")
+	@RequestMapping("/update")
+	@RequiresPermissions("sys:user:update")
+	public R update(@RequestBody SysUserEntity user) {
+		ValidatorUtils.validateEntity(user, UpdateGroup.class);
 
+		sysUserService.update(user);
 
+		return R.ok();
+	}
 
+	/**
+	 * 删除用户
+	 */
+	@SysLog("删除用户")
+	@RequestMapping("/delete")
+	@RequiresPermissions("sys:user:delete")
+	public R delete(@RequestBody Long[] userIds) {
+		if (ArrayUtils.contains(userIds, 1L)) {
+			return R.error("系统管理员不能删除");
+		}
+
+		if (ArrayUtils.contains(userIds, getUserId())) {
+			return R.error("当前用户不能删除");
+		}
+
+		sysUserService.removeByIds(Arrays.asList(userIds));
+
+		return R.ok();
+	}
 }

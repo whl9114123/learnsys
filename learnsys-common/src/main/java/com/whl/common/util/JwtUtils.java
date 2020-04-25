@@ -5,14 +5,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 
 public class JwtUtils {
+    public static final String token = "token";
     //签名私钥
     private static String key = "aaas";
     //签名的失效时间
