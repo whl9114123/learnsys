@@ -27,4 +27,5 @@ public interface SysRoleService extends IService<SysRoleEntity> {
 
 	void deleteBatch(Long[] roleIds);
 
+//    Set<SysRoleEntity> getRolesById(Long userId);
 }

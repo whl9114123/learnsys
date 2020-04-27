@@ -16,9 +16,13 @@ import com.whl.common.models.SysUserEntity;
 import com.whl.common.service.SysDeptService;
 import com.whl.common.service.SysUserRoleService;
 import com.whl.common.service.SysUserService;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,6 +31,7 @@ import java.util.List;
  *
  * @author Mark sunlightcs@gmail.com
  */
+
 @Service("sysUserService")
 public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> implements SysUserService {
 	@Autowired
@@ -36,10 +41,38 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 
 	@Override
 	public List<Long> queryAllMenuId(Long userId) {
-
-        return baseMapper.queryAllMenuId(userId);
+		return baseMapper.queryAllMenuId(userId);
 	}
 
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void saveUser(SysUserEntity user) {
+		user.setCreateTime(new Date());
+		//sha256加密
+		String salt = RandomStringUtils.randomAlphanumeric(20);
+		user.setSalt(salt);
+		user.setPassword(user.getPassword());
+		this.save(user);
+
+		//保存用户与角色关系
+		sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void update(SysUserEntity user) {
+		if (StringUtils.isBlank(user.getPassword())) {
+			user.setPassword(null);
+		} else {
+			SysUserEntity userEntity = this.getById(user.getUserId());
+			user.setPassword(user.getPassword());
+		}
+		this.updateById(user);
+
+		//保存用户与角色关系
+		sysUserRoleService.saveOrUpdate(user.getUserId(), user.getRoleIdList());
+	}
 
 
 	@Override

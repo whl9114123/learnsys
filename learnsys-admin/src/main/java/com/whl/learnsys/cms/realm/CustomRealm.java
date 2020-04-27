@@ -1,11 +1,16 @@
 package com.whl.learnsys.cms.realm;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.whl.common.mappers.SysMenuDao;
+import com.whl.common.mappers.SysUserDao;
+import com.whl.common.models.SysMenuEntity;
 import com.whl.common.models.SysUserEntity;
 import com.whl.common.models.dto.UserDTO;
 import com.whl.common.service.SysMenuService;
 import com.whl.common.service.SysRoleService;
 import com.whl.common.service.SysUserService;
+import com.whl.common.util.Constant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -13,8 +18,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class CustomRealm extends AuthorizingRealm {
     @Autowired
@@ -23,7 +27,10 @@ public class CustomRealm extends AuthorizingRealm {
     private SysMenuService sysMenuService;
     @Autowired
     private SysRoleService sysRoleService;
-
+    @Autowired
+    private SysUserDao sysUserDao;
+    @Autowired
+    private SysMenuDao sysMenuDao;
     @Override
     public void setName(String name) {
         super.setName("customRealm");
@@ -37,18 +44,33 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        UserDTO userDTO = (UserDTO) principalCollection.getPrimaryPrincipal();
+        SysUserEntity user = (SysUserEntity) principalCollection.getPrimaryPrincipal();
+        Long userId = user.getUserId();
+
+        List<String> permsList;
+
+        //系统管理员，拥有最高权限
+        if (userId == Constant.SUPER_ADMIN) {
+            List<SysMenuEntity> menuList = sysMenuDao.selectList(null);
+            permsList = new ArrayList<>(menuList.size());
+            for (SysMenuEntity menu : menuList) {
+                permsList.add(menu.getPerms());
+            }
+        } else {
+            permsList = sysUserDao.queryAllPerms(userId);
+        }
+
+        //用户权限列表
+        Set<String> permsSet = new HashSet<>();
+        for (String perms : permsList) {
+            if (StringUtils.isBlank(perms)) {
+                continue;
+            }
+            permsSet.addAll(Arrays.asList(perms.trim().split(",")));
+        }
+
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        Set<String> roles = new HashSet<>();
-        Set<String> menu = new HashSet<>();
-        userDTO.getRoles().forEach(c -> {
-            roles.add(c.getRoleName());
-        });
-        userDTO.getPermissions().forEach(c -> {
-            menu.add(c.getPerms());
-        });
-        info.setRoles(roles);
-        info.setStringPermissions(menu);
+        info.setStringPermissions(permsSet);
         return info;
     }
 
@@ -67,7 +89,7 @@ public class CustomRealm extends AuthorizingRealm {
         SysUserEntity user = sysUserService.getOne(wrapper);
         String pwd = new String(upToken.getPassword());
         if (user != null && pwd.equals(user.getPassword())) {
-//            //登录成功
+            //登录成功
 //            Map<String,Object> map =new HashMap<>();
 //            user.setPassword(null);
 //            Set<SysRoleEntity> roles = sysRoleService.getRolesById(user.getUserId());
@@ -75,8 +97,8 @@ public class CustomRealm extends AuthorizingRealm {
 //            Set<SysMenuEntity> permissions = sysMenuService.getPermissionByRoles(roleIds);
             UserDTO userDTO = new UserDTO();
 //            userDTO.setRoles(roles).setPermissions(permissions);
-            //安全数据，密码，realm域名
-            return new SimpleAuthenticationInfo(userDTO, upToken.getPassword(), this.getName());
+//            安全数据，密码，realm域名
+            return new SimpleAuthenticationInfo(user, upToken.getPassword(), this.getName());
         } else {
             return null;
         }

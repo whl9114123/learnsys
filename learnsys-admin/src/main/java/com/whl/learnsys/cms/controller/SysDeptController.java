@@ -14,10 +14,7 @@ import com.whl.common.util.Constant;
 import com.whl.common.util.R;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/dept")
+@CrossOrigin
 public class SysDeptController extends AbstractController {
     @Autowired
     private SysDeptService sysDeptService;

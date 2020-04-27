@@ -23,6 +23,7 @@ import java.util.Arrays;
 @Api(tags = "视频管理")
 @RestController
 @RequestMapping("sys/videoinfo")
+@CrossOrigin
 public class VideoInfoController {
     @Autowired
     private VideoInfoService videoInfoService;
@@ -31,15 +32,15 @@ public class VideoInfoController {
      * 列表
      */
 
-    @ApiOperation(value = "获取用户列表", notes = "获取用户列表")
+    @ApiOperation(value = "获取视频列表", notes = "获取用户列表")
     @ApiImplicitParam(name = "pageParam", value = "获取参数", required = true, dataType = "PageParam")
     @PostMapping( "/list")
     public ResultModel<Page<VideoInfoEntity>> list(@RequestBody PageParam pageParam) {
 
-        Page<VideoInfoEntity> page = new Page<>(pageParam.getCurrent(), pageParam.getSize());
+        Page<VideoInfoEntity> page = new Page<>(pageParam.getPage(), pageParam.getLimit());
         Page<VideoInfoEntity> page1 = videoInfoService.page(page);
         int hasMore = 0;
-        if (page1.getPages() >= pageParam.getCurrent()) {
+        if (page1.getPages() >= pageParam.getPage()) {
             hasMore = 1;
         }
 
@@ -77,7 +78,7 @@ public class VideoInfoController {
     public R update(@RequestBody VideoInfoEntity videoInfo){
 
         videoInfoService.updateById(videoInfo);
-        
+
         return R.ok();
     }
 

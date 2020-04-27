@@ -22,7 +22,7 @@ public class RedisAspect {
     @Around("execution(* com.whl.common.service.CacheService.*(..))")
     public Object around(ProceedingJoinPoint point) throws Throwable {
         Object result = null;
-        log.error("redis 开关状态");
+//        log.error("redis 开关状态");
         if (open) {
             try {
                 result = point.proceed();

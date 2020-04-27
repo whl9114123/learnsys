@@ -14,9 +14,29 @@ import java.util.List;
  */
 public interface SysUserService extends IService<SysUserEntity> {
 
-
+    /**
+     * 查询用户的所有菜单ID
+     */
     List<Long> queryAllMenuId(Long userId);
 
+    /**
+     * 保存用户
+     */
+    void saveUser(SysUserEntity user);
+
+    /**
+     * 修改用户
+     */
+    void update(SysUserEntity user);
+
+    /**
+     * 修改密码
+     *
+     * @param userId      用户ID
+     * @param password    原密码
+     * @param newPassword 新密码
+     */
     boolean updatePassword(Long userId, String password, String newPassword);
+
 }
 

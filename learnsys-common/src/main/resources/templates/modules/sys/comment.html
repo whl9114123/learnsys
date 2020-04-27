@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>评论 </title>
+    <#include "/header.html">
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <#if shiro.hasPermission("sys:comment:save")>
+            <a @click="add" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;新增</a>
+        </
+        #if>
+        <#if shiro.hasPermission("sys:comment:update")>
+        <a @click="update" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+    </
+    #if>
+    <#if shiro.hasPermission("sys:comment:delete")>
+    <a @click="del" class="btn btn-primary"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+</
+#if>
+</div>
+<table id="jqGrid"></table>
+<div id="jqGridPager"></div>
+</div>
+
+<div class="panel panel-default" v-show="!showList">
+    <div class="panel-heading">{{title}}</div>
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-2 control-label">评论内容</div>
+            <div class="col-sm-10">
+                <input class="form-control" placeholder="评论内容" type="text" v-model="comment.content"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">课程id</div>
+            <div class="col-sm-10">
+                <input class="form-control" placeholder="课程id" type="text" v-model="comment.courseId"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">用户id</div>
+            <div class="col-sm-10">
+                <input class="form-control" placeholder="用户id" type="text" v-model="comment.userId"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">状态</div>
+            <div class="col-sm-10">
+                <input class="form-control" placeholder="状态" type="text" v-model="comment.status"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label">创建时间</div>
+            <div class="col-sm-10">
+                <input class="form-control" placeholder="创建时间" type="text" v-model="comment.createTime"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2 control-label"></div>
+            <input @click="saveOrUpdate" class="btn btn-primary" data-loading-text="保存中..." id="btnSaveOrUpdate"
+                   type="button" value="确定"/>
+            &nbsp;&nbsp;<input @click="reload" class="btn btn-warning" type="button" value="返回"/>
+        </div>
+    </form>
+</div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/comment.js?_${.now?long}"></script>
+</body>
+</html>

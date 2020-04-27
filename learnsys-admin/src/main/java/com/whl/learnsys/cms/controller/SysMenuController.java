@@ -13,13 +13,11 @@ import com.whl.common.models.SysMenuEntity;
 import com.whl.common.service.SysMenuService;
 import com.whl.common.util.Constant;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,8 +26,10 @@ import java.util.List;
  *
  * @author Mark sunlightcs@gmail.com
  */
+@Api(tags = "菜单")
 @RestController
 @RequestMapping("/sys/menu")
+@CrossOrigin
 public class SysMenuController extends AbstractController {
     @Autowired
     private SysMenuService sysMenuService;

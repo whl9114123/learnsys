@@ -1,13 +1,12 @@
 package com.whl.learnsys.cms.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.whl.common.enums.ResultCode;
-import com.whl.common.models.ResultModel;
 import com.whl.common.param.UserParam;
 import com.whl.common.service.CacheService;
+import com.whl.common.util.R;
+import com.whl.learnsys.cms.realm.ShiroUtils;
 import io.swagger.annotations.Api;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,32 +20,39 @@ import java.io.IOException;
 
 @Api(tags = {"login"})
 @RestController
+@CrossOrigin
 @RequestMapping("/")
 public class LoginController {
     @Autowired
     DefaultKaptcha defaultKaptcha;
     @Autowired
     CacheService cacheService;
-
-
     @PostMapping("/login")
-    public ResultModel<String> login(@RequestBody UserParam param) {
-        try {
-//            String gifcode = cacheService.getObject("gifcode", String.class);
+    public R login(@RequestBody UserParam param) {
+        //            String gifcode = cacheService.getObject("gifcode", String.class);
 //            if (!StringUtils.isBlank(gifcode) && gifcode.equals(param.getCode())) {
 //               ResultModel.valueOf(ResultCode.false, null, "验证码校验失败");
 //            }
-            //密码加密 1.加密内容 2.盐值,3加密次数
+        //密码加密 1.加密内容 2.盐值,3加密次数
 //            String md5Hash=new Md5Hash(param.getPassword(),param.getUsername(),3).toString();
-            UsernamePasswordToken upToken = new UsernamePasswordToken(param.getUsername(), param.getPassword());
-            Subject subject = SecurityUtils.getSubject();
-            subject.login(upToken);
-            String sessionId = (String) subject.getSession().getId();
-            return ResultModel.valueOf(ResultCode.SUCCESS, sessionId, "登录成功");
-        } catch (Exception e) {
-            return ResultModel.valueOf(ResultCode.SUCCESS, null, "登录失败");
+
+        try {
+            Subject subject = ShiroUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(param.getUsername(), param.getPassword());
+            subject.login(token);
+        } catch (UnknownAccountException e) {
+            return R.error(e.getMessage());
+        } catch (IncorrectCredentialsException e) {
+            return R.error("账号或密码不正确");
+        } catch (LockedAccountException e) {
+            return R.error("账号已被锁定,请联系管理员");
+        } catch (AuthenticationException e) {
+            return R.error("账户验证失败");
         }
+
+        return R.ok();
     }
+
 
     /**
      * 获取验证码

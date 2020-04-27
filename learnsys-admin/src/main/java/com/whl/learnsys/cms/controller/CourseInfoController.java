@@ -9,7 +9,6 @@ import com.whl.common.param.CourseRequest;
 import com.whl.common.service.CourseInfoService;
 import com.whl.common.util.R;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,24 +23,22 @@ import java.util.Arrays;
 @Api(tags = "课程管理")
 @RestController
 @RequestMapping("sys/courseinfo")
+@CrossOrigin
 public class CourseInfoController {
     @Autowired
     private CourseInfoService courseInfoService;
 
 
-
-
-    @ApiOperation(value = "获取列表", notes = "获取用户列表")
-
+    @ApiOperation(value = "获取课程列表")
     @PostMapping( "/list")
     public ResultModel<Page<CourseInfoEntity>> list(@RequestBody CourseRequest param) {
 
-        Page<CourseInfoEntity> page=new Page<>(param.getCurrent(),param.getSize());
+        Page<CourseInfoEntity> page = new Page<>(param.getPage(), param.getLimit());
         QueryWrapper<CourseInfoEntity> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("type_id",param.getTypeId());
         Page<CourseInfoEntity> page1 =courseInfoService.page(page,queryWrapper);
         int hasMore=0;
-        if(page1.getPages()>=param.getCurrent()) {
+        if (page1.getPages() >= param.getPage()) {
             hasMore=1;
         }
 
@@ -79,7 +76,7 @@ public class CourseInfoController {
     public R update(@RequestBody CourseInfoEntity courseInfo){
 
         courseInfoService.updateById(courseInfo);
-        
+
         return R.ok();
     }
 

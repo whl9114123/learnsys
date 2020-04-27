@@ -5,10 +5,7 @@ import com.whl.common.service.CourseTypeService;
 import com.whl.common.util.R;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 
@@ -21,6 +18,7 @@ import java.util.Arrays;
 @Api(tags = "课程类型管理")
 @RestController
 @RequestMapping("sys/coursetype")
+@CrossOrigin
 public class CourseTypeController {
     @Autowired
     private CourseTypeService courseTypeService;
@@ -60,7 +58,7 @@ public class CourseTypeController {
     public R update(@RequestBody CourseTypeEntity courseType){
 
         courseTypeService.updateById(courseType);
-        
+
         return R.ok();
     }
 
