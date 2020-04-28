@@ -13,7 +13,11 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.crazycake</groupId>
+            <artifactId>shiro-redis</artifactId>
+            <version>3.0.0</version>
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -92,7 +96,19 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.3.1.tmp</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.crazycake</groupId>
+            <artifactId>shiro-redis</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.crazycake</groupId>
+            <artifactId>shiro-redis</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

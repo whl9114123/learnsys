@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.crazycake.shiro.AuthCachePrincipal;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @Data
 @TableName("sys_user")
-public class SysUserEntity implements Serializable {
+public class SysUserEntity implements Serializable, AuthCachePrincipal {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -88,4 +89,9 @@ public class SysUserEntity implements Serializable {
      */
     @TableField(exist = false)
     private String deptName;
+
+    @Override
+    public String getAuthCacheKey() {
+        return null;
+    }
 }

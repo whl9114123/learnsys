@@ -9,12 +9,10 @@
 package com.whl.learnsys.cms.controller;
 
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.whl.common.enums.ResultCode;
 import com.whl.common.models.ResultModel;
 import com.whl.common.models.SysUserEntity;
 import com.whl.common.models.dto.UserDTO;
-import com.whl.common.param.PageParam;
 import com.whl.common.service.SysUserRoleService;
 import com.whl.common.service.SysUserService;
 import com.whl.common.util.PageUtils;
@@ -31,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统用户
@@ -39,28 +38,23 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/user")
+
 public class SysUserController extends AbstractController {
 	@Autowired
 	private SysUserService sysUserService;
 	@Autowired
 	private SysUserRoleService sysUserRoleService;
 
-	/**
-	 * 所有用户列表
-	 */
-    @PostMapping("/list")
-	@RequiresPermissions("sys:user:list")
-    public R list(@RequestParam PageParam params) {
+    /**
+     * 所有用户列表
+     */
+    @RequestMapping("/list")
+//    @RequiresPermissions("sys:user:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        PageUtils page = sysUserService.queryPage(params);
 
-        Page<SysUserEntity> page = new Page<>(params.getPage(), params.getLimit());
-        Page<SysUserEntity> page1 = sysUserService.page(page);
-        int hasMore = 0;
-        if (page1.getPages() >= params.getPage()) {
-            hasMore = 1;
-        }
-        PageUtils page2 = new PageUtils(page1);
-        return R.ok().put("page", page2);
-	}
+        return R.ok().put("page", page);
+    }
 
 	/**
 	 * 获取登录的用户信息

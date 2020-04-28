@@ -46,11 +46,7 @@
         <version>1.4.0</version>
     </dependency>
     <!--shiro与redis整合实现sessionDao -->
-    <dependency>
-        <groupId>org.crazycake</groupId>
-        <artifactId>shiro-redis</artifactId>
-        <version>3.0.0</version>
-    </dependency>
+
     <!-- kaptcha 验证码 -->
     <dependency>
         <groupId>com.github.penggle</groupId>

@@ -36,8 +36,7 @@ learnsys:
       open : true
 server:
   port: 8888
-  servlet:
-    context-path: /learnsys
+
 
 swagger:
   host: localhost:8888

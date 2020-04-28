@@ -2,8 +2,10 @@ package com.whl.common.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.whl.common.models.SysUserEntity;
+import com.whl.common.util.PageUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统用户
@@ -13,7 +15,7 @@ import java.util.List;
  * @date 2020-03-07 17:34:54
  */
 public interface SysUserService extends IService<SysUserEntity> {
-
+    PageUtils queryPage(Map<String, Object> params);
     /**
      * 查询用户的所有菜单ID
      */

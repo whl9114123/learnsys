@@ -10,12 +10,17 @@ package com.whl.common.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.whl.common.mappers.SysUserDao;
+import com.whl.common.models.SysDeptEntity;
 import com.whl.common.models.SysUserEntity;
 import com.whl.common.service.SysDeptService;
 import com.whl.common.service.SysUserRoleService;
 import com.whl.common.service.SysUserService;
+import com.whl.common.util.Constant;
+import com.whl.common.util.PageUtils;
+import com.whl.common.util.Query;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,6 +45,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 	@Autowired
 	private SysDeptService sysDeptService;
 
+	@Override
+	public PageUtils queryPage(Map<String, Object> params) {
+		String username = (String) params.get("username");
+
+		IPage<SysUserEntity> page = this.page(
+				new Query<SysUserEntity>().getPage(params),
+				new QueryWrapper<SysUserEntity>()
+						.like(StringUtils.isNotBlank(username), "username", username)
+						.apply(params.get(Constant.SQL_FILTER) != null, (String) params.get(Constant.SQL_FILTER))
+		);
+
+		for (SysUserEntity sysUserEntity : page.getRecords()) {
+			SysDeptEntity sysDeptEntity = sysDeptService.getById(sysUserEntity.getDeptId());
+			sysUserEntity.setDeptName(sysDeptEntity.getName());
+		}
+
+		return new PageUtils(page);
+	}
 	@Override
 	public List<Long> queryAllMenuId(Long userId) {
 		return baseMapper.queryAllMenuId(userId);

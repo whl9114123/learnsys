@@ -1,9 +1,17 @@
 package com.whl.common.param;
 
-import lombok.Data;
+import lombok.Setter;
 
-@Data
+@Setter
 public class PageParam {
-    private Integer page;
-    private Integer limit;
+    private String page;
+    private String limit;
+
+    public Long getPage() {
+        return Long.parseLong(page);
+    }
+
+    public Long getLimit() {
+        return Long.parseLong(limit);
+    }
 }
