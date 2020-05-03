@@ -1,5 +1,6 @@
 package com.whl.common.models;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class CourseInfoEntity implements Serializable {
     /**
      *
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Long id;
     /**
      * 课程名字

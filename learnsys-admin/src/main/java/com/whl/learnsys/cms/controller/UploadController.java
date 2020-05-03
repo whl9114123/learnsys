@@ -59,7 +59,7 @@ public class UploadController {
             file.transferTo(dest); //保存文件
             System.out.print("保存文件路径"+path+"\n");
             //url="http://你自己的域名/项目名/images/"+fileName;//正式项目
-          url="http://localhost:9001/static/"+fileName;//本地运行项目
+            url = "http://localhost:8888/static/" + fileName;//本地运行项目
 
             System.out.print("保存的完整url===="+url+"\n");
 

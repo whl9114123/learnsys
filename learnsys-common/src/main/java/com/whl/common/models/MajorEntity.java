@@ -1,5 +1,6 @@
 package com.whl.common.models;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class MajorEntity implements Serializable {
     /**
      * 专业id
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Long id;
     /**
      * 专业名称

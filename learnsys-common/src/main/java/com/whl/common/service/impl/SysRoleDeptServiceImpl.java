@@ -14,6 +14,7 @@ import com.whl.common.models.SysRoleDeptEntity;
 import com.whl.common.service.SysRoleDeptService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class SysRoleDeptServiceImpl extends ServiceImpl<SysRoleDeptDao, SysRoleD
         //先删除角色与部门关系
         deleteBatch(new Long[]{roleId});
 
-        if (deptIdList.size() == 0) {
+        if (CollectionUtils.isEmpty(deptIdList)) {
             return;
         }
 

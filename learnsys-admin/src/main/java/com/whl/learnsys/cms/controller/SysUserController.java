@@ -49,7 +49,7 @@ public class SysUserController extends AbstractController {
      * 所有用户列表
      */
     @RequestMapping("/list")
-//    @RequiresPermissions("sys:user:list")
+	@RequiresPermissions("sys:user:list")
     public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = sysUserService.queryPage(params);
 
@@ -91,7 +91,8 @@ public class SysUserController extends AbstractController {
 	 */
 	@RequestMapping("/info/{userId}")
 	@RequiresPermissions("sys:user:info")
-    public R info(@PathVariable("userId") Long userId) {
+
+	public R info(@PathVariable("userId") Long userId) {
 		SysUserEntity user = sysUserService.getById(userId);
 
 		//获取用户所属的角色列表

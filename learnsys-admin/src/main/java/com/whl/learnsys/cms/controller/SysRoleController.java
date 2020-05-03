@@ -12,6 +12,7 @@ import com.whl.common.models.SysRoleEntity;
 import com.whl.common.service.SysRoleDeptService;
 import com.whl.common.service.SysRoleMenuService;
 import com.whl.common.service.SysRoleService;
+import com.whl.common.util.PageUtils;
 import com.whl.common.util.R;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,10 @@ public class SysRoleController extends AbstractController {
 	 */
 	@RequestMapping("/list")
 	@RequiresPermissions("sys:role:list")
-	public R list(@RequestParam Map<String, Object> params) {
+    public R list(@RequestParam Map<String, Object> params) {
+        PageUtils page = sysRoleService.queryPage(params);
 
-
-		return R.ok().put("page", null);
+        return R.ok().put("page", page);
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class SysRoleController extends AbstractController {
 	 */
 	@RequestMapping("/select")
 	@RequiresPermissions("sys:role:select")
-	public R select() {
+    public R select() {
 		List<SysRoleEntity> list = sysRoleService.list();
 
 		return R.ok().put("list", list);
@@ -63,7 +64,7 @@ public class SysRoleController extends AbstractController {
 	 */
 	@RequestMapping("/info/{roleId}")
 	@RequiresPermissions("sys:role:info")
-	public R info(@PathVariable("roleId") Long roleId) {
+    public R info(@PathVariable("roleId") Long roleId) {
 		SysRoleEntity role = sysRoleService.getById(roleId);
 
 		//查询角色对应的菜单
@@ -83,7 +84,7 @@ public class SysRoleController extends AbstractController {
 
 	@RequestMapping("/save")
 	@RequiresPermissions("sys:role:save")
-	public R save(@RequestBody SysRoleEntity role) {
+    public R save(@RequestBody SysRoleEntity role) {
 
 
 		sysRoleService.saveRole(role);
@@ -97,7 +98,7 @@ public class SysRoleController extends AbstractController {
 
 	@RequestMapping("/update")
 	@RequiresPermissions("sys:role:update")
-	public R update(@RequestBody SysRoleEntity role) {
+    public R update(@RequestBody SysRoleEntity role) {
 
 
 		sysRoleService.update(role);
@@ -111,7 +112,7 @@ public class SysRoleController extends AbstractController {
 
 	@RequestMapping("/delete")
 	@RequiresPermissions("sys:role:delete")
-	public R delete(@RequestBody Long[] roleIds) {
+    public R delete(@RequestBody Long[] roleIds) {
 		sysRoleService.deleteBatch(roleIds);
 
 		return R.ok();

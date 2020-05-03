@@ -11,10 +11,12 @@ import com.whl.common.service.SysRoleService;
 import com.whl.common.service.SysUserService;
 import com.whl.common.util.Constant;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -70,6 +72,9 @@ public class CustomRealm extends AuthorizingRealm {
         }
 
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        Session session = SecurityUtils.getSubject().getSession();
+        session.setAttribute("permissions", permsSet);
+
         info.setStringPermissions(permsSet);
         return info;
     }

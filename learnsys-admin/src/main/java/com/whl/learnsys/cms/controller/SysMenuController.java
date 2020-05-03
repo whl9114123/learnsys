@@ -15,10 +15,12 @@ import com.whl.common.util.Constant;
 import com.whl.common.util.R;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -34,13 +36,17 @@ public class SysMenuController extends AbstractController {
     @Autowired
     private SysMenuService sysMenuService;
 
+
     /**
      * 导航菜单
      */
     @RequestMapping("/nav")
     public R nav() {
         List<SysMenuEntity> menuList = sysMenuService.getUserMenuList(getUserId());
-        return R.ok().put("menuList", menuList);
+
+        Object pe = SecurityUtils.getSubject().getSession().getAttribute("permissions");
+        HashSet permissions = (HashSet) pe;
+        return R.ok().put("menuList", menuList).put("permissions", permissions);
     }
 
     /**

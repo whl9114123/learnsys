@@ -11,7 +11,9 @@ package com.whl.common.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.whl.common.models.SysDeptEntity;
+import com.whl.common.util.PageUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +38,5 @@ public interface SysDeptService extends IService<SysDeptEntity> {
 	 */
 	List<Long> getSubDeptIdList(Long deptId);
 
+    PageUtils queryPage(HashMap<String, Object> stringObjectHashMap);
 }

@@ -1,5 +1,6 @@
 package com.whl.common.models;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -8,8 +9,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
- * 
+ *
+ *
  * @author Mark
  * @email sunlightcs@gmail.com
  * @date 2020-03-13 16:00:37
@@ -20,9 +21,9 @@ public class VideoInfoEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 *
 	 */
-	@TableId
+	@TableId(type = IdType.AUTO)
 	private Long id;
 	/**
 	 * 视频标题
@@ -41,11 +42,11 @@ public class VideoInfoEntity implements Serializable {
 	 */
 	private String url;
 	/**
-	 * 
+	 *
 	 */
 	private Date createTime;
 	/**
-	 * 
+	 *
 	 */
 	private Date modifyTime;
 	/**
@@ -57,4 +58,5 @@ public class VideoInfoEntity implements Serializable {
 	 */
 	private Integer approvalStatus;
 
+	private Long courseId;
 }

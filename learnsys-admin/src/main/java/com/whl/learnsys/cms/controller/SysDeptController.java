@@ -11,6 +11,7 @@ package com.whl.learnsys.cms.controller;
 import com.whl.common.models.SysDeptEntity;
 import com.whl.common.service.SysDeptService;
 import com.whl.common.util.Constant;
+import com.whl.common.util.PageUtils;
 import com.whl.common.util.R;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,10 @@ public class SysDeptController extends AbstractController {
      */
     @RequestMapping("/list")
     @RequiresPermissions("sys:dept:list")
-    public List<SysDeptEntity> list() {
-        List<SysDeptEntity> deptList = sysDeptService.queryList(new HashMap<String, Object>());
+    public R list() {
+        PageUtils page = sysDeptService.queryPage(new HashMap<String, Object>());
 
-        return deptList;
+        return R.ok().put("page", page);
     }
 
     /**
