@@ -3,6 +3,7 @@ package com.whl.learnsys.cms.controller;
 import com.whl.common.models.CommentEntity;
 import com.whl.common.service.CommentService;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("sys/comment")
 @CrossOrigin
+@Api(tags = "评论管理")
 public class CommentController {
     @Autowired
     private CommentService commentService;

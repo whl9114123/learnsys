@@ -1,6 +1,7 @@
 package com.whl.learnsys.cms.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.whl.common.models.SysUserEntity;
 import com.whl.common.param.UserParam;
 import com.whl.common.service.CacheService;
 import com.whl.common.util.R;
@@ -27,19 +28,23 @@ public class LoginController {
     DefaultKaptcha defaultKaptcha;
     @Autowired
     CacheService cacheService;
+
     @PostMapping("/login")
     public R login(@RequestBody UserParam param) {
-        //            String gifcode = cacheService.getObject("gifcode", String.class);
-//            if (!StringUtils.isBlank(gifcode) && gifcode.equals(param.getCode())) {
-//               ResultModel.valueOf(ResultCode.false, null, "验证码校验失败");
-//            }
-        //密码加密 1.加密内容 2.盐值,3加密次数
-//            String md5Hash=new Md5Hash(param.getPassword(),param.getUsername(),3).toString();
-
+        //redis 获取对象
+//        String gifcode = cacheService.getObject("gifcode", String.class);
+//        if (!StringUtils.isBlank(gifcode) && gifcode.equals(param.getCode())) {
+//            ResultModel.valueOf(ResultCode.FAILURE, null, "验证码校验失败");
+//        }
+//        //密码加密 1.加密内容 2.盐值,3加密次数
+//        String md5Hash = new Md5Hash(param.getPassword(), param.getUsername(), 3).toString();
+        Long uid = 0L;
         try {
             Subject subject = ShiroUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(param.getUsername(), param.getPassword());
             subject.login(token);
+            SysUserEntity user = (SysUserEntity) subject.getPrincipal();
+            uid = user.getUserId();
         } catch (UnknownAccountException e) {
             return R.error(e.getMessage());
         } catch (IncorrectCredentialsException e) {
@@ -50,12 +55,13 @@ public class LoginController {
             return R.error("账户验证失败");
         }
 
-        return R.ok();
+        return R.ok().put("uid", uid);
     }
 
 
     /**
      * 获取验证码
+     *
      * @param response
      */
     @GetMapping("/getCode")
@@ -65,7 +71,7 @@ public class LoginController {
         try {
             //生产验证码字符串并保存到session中
             String createText = defaultKaptcha.createText();
-            cacheService.setObjectMinutes("gifcode", createText, 10);
+//            cacheService.setObjectMinutes("gifcode", createText, 10);
             //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
             ImageIO.write(challenge, "jpg", jpegOutputStream);

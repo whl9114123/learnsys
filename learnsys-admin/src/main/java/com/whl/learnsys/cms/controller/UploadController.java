@@ -34,7 +34,6 @@ public class UploadController {
         }
      // 获取文件名
         String fileName = file.getOriginalFilename();
-//        System.out.print("上传的文件名为: "+fileName+"\n");
         fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + "_" + fileName;
         System.out.print("（加个时间戳，尽量避免文件名称重复）保存的文件名为: "+fileName+"\n");
         //加个时间戳，尽量避免文件名称重复
@@ -60,7 +59,6 @@ public class UploadController {
             System.out.print("保存文件路径"+path+"\n");
             //url="http://你自己的域名/项目名/images/"+fileName;//正式项目
             url = "http://localhost:8888/static/" + fileName;//本地运行项目
-
             System.out.print("保存的完整url===="+url+"\n");
 
         } catch (IOException e) {

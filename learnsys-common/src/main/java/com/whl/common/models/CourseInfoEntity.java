@@ -1,6 +1,7 @@
 package com.whl.common.models;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -33,11 +34,19 @@ public class CourseInfoEntity implements Serializable {
     /**
      * 授课老师
      */
-    private String teacherId;
+    private Long teacherId;
+    /**
+     * 授课老师
+     */
+    @TableField(exist = false)
+    private String teacherName;
+    private String icon;
     /**
      * 审核状态
      */
     private Integer approvalStatus;
+    @TableField(exist = false)
+    private String approval;
     /**
      * 状态
      */

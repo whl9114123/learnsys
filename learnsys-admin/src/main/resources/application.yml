@@ -37,7 +37,7 @@ file:
 
 learnsys:
   redis:
-      open : true
+    open: false
 server:
   port: 8888
 

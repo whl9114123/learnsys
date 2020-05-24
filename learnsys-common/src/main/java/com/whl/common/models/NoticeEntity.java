@@ -29,6 +29,7 @@ public class NoticeEntity implements Serializable {
      * 公告内容
      */
     private String content;
+    private String title;
     /**
      * 课程id
      */

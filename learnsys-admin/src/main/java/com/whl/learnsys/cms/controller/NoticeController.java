@@ -1,14 +1,16 @@
 package com.whl.learnsys.cms.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.whl.common.models.NoticeEntity;
 import com.whl.common.service.NoticeService;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 
 /**
@@ -21,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("sys/notice")
 @CrossOrigin
+@Api(tags = "公告管理")
 public class NoticeController {
     @Autowired
     private NoticeService noticeService;
@@ -28,13 +31,18 @@ public class NoticeController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
-    @RequiresPermissions("sys:notice:list")
-    public R list(@RequestParam Map<String, Object> params) {
+    @RequestMapping("/list/{id}")
+
+    public R list(@PathVariable("id") long id) {
+
+        List<NoticeEntity> list = noticeService.list(new QueryWrapper<NoticeEntity>().eq("user_id", id));
+
 //        PageUtils page = noticeService.queryPage(params);
 //
-//        return R.ok().put("page", page);
-        return null;
+
+
+        return R.ok().put("list", list);
+
     }
 
 

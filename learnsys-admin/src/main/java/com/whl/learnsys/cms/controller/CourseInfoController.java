@@ -1,15 +1,11 @@
 package com.whl.learnsys.cms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.whl.common.enums.ResultCode;
 import com.whl.common.models.CourseInfoEntity;
-import com.whl.common.models.ResultModel;
 import com.whl.common.models.SysUserEntity;
 import com.whl.common.models.VideoInfoEntity;
 import com.whl.common.models.vo.CourseInfoVO;
 import com.whl.common.models.vo.VideoInfoVO;
-import com.whl.common.param.CourseRequest;
 import com.whl.common.service.CourseInfoService;
 import com.whl.common.service.SysUserService;
 import com.whl.common.service.VideoInfoService;
@@ -22,7 +18,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -41,19 +39,24 @@ public class CourseInfoController {
 
     @ApiOperation(value = "获取课程列表")
     @PostMapping("/list")
-    public ResultModel<Page<CourseInfoEntity>> list(@RequestBody CourseRequest param) {
-
-        Page<CourseInfoEntity> page = new Page<>(param.getPage(), param.getLimit());
-        QueryWrapper<CourseInfoEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("type_id", param.getTypeId());
-        Page<CourseInfoEntity> page1 = courseInfoService.page(page, queryWrapper);
-        int hasMore = 0;
-        if (page1.getPages() >= param.getPage()) {
-            hasMore = 1;
-        }
-
-
-        return ResultModel.valueOf(ResultCode.SUCCESS, page1, null, hasMore);
+    public R list() {
+        QueryWrapper<SysUserEntity> queryWrapper = new QueryWrapper<>();
+        List<CourseInfoEntity> list = courseInfoService.list();
+        List<Long> collect = list.stream().map(c -> c.getTeacherId()).collect(Collectors.toList());
+        List<SysUserEntity> user = sysUserService.list(queryWrapper.in("user_id", collect));
+        HashMap<Long, String> map = new HashMap<>();
+        user.forEach(c -> {
+            map.put(c.getUserId(), c.getUsername());
+        });
+        list.forEach(c -> {
+            if (c.getApprovalStatus() == 1) {
+                c.setApproval("通过");
+            } else {
+                c.setApproval("不通过");
+            }
+            c.setTeacherName(map.get(c.getTeacherId()));
+        });
+        return R.ok().put("list", list);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.whl.learnsys.cms.controller;
 import com.whl.common.models.ClazzEntity;
 import com.whl.common.service.ClazzService;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping("sys/clazz")
+@Api(tags = "班级管理")
 public class ClazzController {
     @Autowired
     private ClazzService clazzService;

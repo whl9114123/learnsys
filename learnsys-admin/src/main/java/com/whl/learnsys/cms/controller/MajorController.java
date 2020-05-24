@@ -3,6 +3,7 @@ package com.whl.learnsys.cms.controller;
 import com.whl.common.models.MajorEntity;
 import com.whl.common.service.MajorService;
 import com.whl.common.util.R;
+import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("sys/major")
 @CrossOrigin
+@Api(tags = "专业管理")
 public class MajorController {
     @Autowired
     private MajorService majorService;

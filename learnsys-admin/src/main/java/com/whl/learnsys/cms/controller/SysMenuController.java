@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * 系统菜单
  *
- * @author Mark sunlightcs@gmail.com
+ * @author whl
  */
 @Api(tags = "菜单")
 @RestController
